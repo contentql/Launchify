@@ -35,7 +35,9 @@ const ListItem = ({
   return (
     <div className='card relative flex h-full w-full flex-col items-start justify-start gap-y-4  rounded-md bg-base-200 p-4 shadow-lg '>
       {/* {getRandomIcon()} */}
-      <Link href='#' className='cur text-lg font-semibold '>
+      <Link
+        href={`/dashboard/project/${site?.name}`}
+        className='cur text-lg font-semibold '>
         {site?.name}
       </Link>
       <p className='line-clamp-2 text-sm text-base-content/80'>
