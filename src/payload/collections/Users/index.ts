@@ -27,7 +27,7 @@ export const Users: CollectionConfig = {
           buttonText: 'Verify Account',
           userName: 'user',
           image: user.imageUrl,
-          href: `${env.PAYLOAD_URL}/verify?token=${token}&id=${user.id}`,
+          href: `${env.PAYLOAD_URL}/verify-email?token=${token}&id=${user.id}`,
         })
       },
     },

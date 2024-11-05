@@ -71,12 +71,12 @@ const SignUpForm: React.FC = () => {
     <div className='flex w-full items-center justify-center'>
       {isEmailSent ? (
         <>
-          <div className='mx-auto  text-center'>
+          <div className='mx-auto text-center text-base-content'>
             <div className='mx-auto flex w-fit gap-4 rounded-md bg-base-200 p-4'>
-              <GoCheckCircleFill className='text-cq-success size-6 shrink-0 items-start' />
+              <GoCheckCircleFill className='size-6 shrink-0 items-start text-success' />
               <div className='text-left font-semibold'>
                 Email has been sent to{' '}
-                <code className='bg-cq-background rounded-sm px-2 py-1'>
+                <code className='rounded-md bg-base-100 px-2 py-1'>
                   {emailSentTo}
                 </code>
                 <span className='text-cq-text-secondary mt-1 block font-normal'>
