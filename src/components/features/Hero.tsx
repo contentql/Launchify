@@ -1,6 +1,7 @@
 'use client'
 
 import Button from '../common/Button'
+import Container from '../common/Container'
 import ScrollAnimationWrapper from '../common/ScrollAnimationWrapper'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
@@ -10,7 +11,7 @@ import getScrollAnimation from '@/utils/getScrollAnimation'
 const Hero = () => {
   const scrollAnimation = getScrollAnimation()?.top
   return (
-    <div className='mx-auto max-w-7xl px-2'>
+    <Container>
       <ScrollAnimationWrapper>
         <motion.div
           className='grid grid-flow-row grid-rows-2 gap-8 sm:grid-flow-col sm:grid-cols-2 md:grid-rows-1'
@@ -42,7 +43,7 @@ const Hero = () => {
           </div>
         </motion.div>
       </ScrollAnimationWrapper>
-    </div>
+    </Container>
   )
 }
 

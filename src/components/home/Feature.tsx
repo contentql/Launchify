@@ -1,5 +1,6 @@
 'use client'
 
+import Container from '../common/Container'
 import ScrollAnimationWrapper from '../common/ScrollAnimationWrapper'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
@@ -10,7 +11,7 @@ const Feature = () => {
   const scrollLeft = getScrollAnimation()?.left
   const scrollRight = getScrollAnimation()?.right
   return (
-    <div className='mx-auto mt-20 max-w-7xl px-2'>
+    <Container>
       <ScrollAnimationWrapper className='flex min-h-[400px] w-full flex-col items-center justify-between gap-6 md:flex-row'>
         <motion.div
           variants={scrollLeft}
@@ -52,7 +53,7 @@ const Feature = () => {
           </p>
         </motion.div>
       </ScrollAnimationWrapper>
-    </div>
+    </Container>
   )
 }
 

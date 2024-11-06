@@ -1,6 +1,7 @@
 'use client'
 
 import Button from '../common/Button'
+import Container from '../common/Container'
 import { Glow, GlowCapture } from '../common/Glow'
 import React from 'react'
 
@@ -9,35 +10,33 @@ import { cn } from '@/utils/cn'
 
 const Pricing = () => {
   return (
-    <section className='relative z-10 overflow-hidden'>
-      <div className='container mx-auto'>
-        <div className='-mx-4 flex flex-wrap'>
-          <div className='w-full px-4'>
-            <div className='mx-auto mb-[60px] max-w-[510px] text-center'>
-              <span className='mb-2 block text-lg font-semibold text-primary'>
-                Pricing Table
-              </span>
-              <h2 className=' mb-3 text-3xl font-bold leading-[1.208] sm:text-4xl'>
-                Plans for you
-              </h2>
-              <p className='text-base-content/80'>
-                There are many variations of passages of Lorem Ipsum available
-                but the majority have suffered alteration in some form.
-              </p>
-            </div>
+    <Container>
+      <div className='-mx-4 flex flex-wrap'>
+        <div className='w-full px-4'>
+          <div className='mx-auto mb-[60px] max-w-[510px] text-center'>
+            <span className='mb-2 block text-lg font-semibold text-primary'>
+              Pricing Table
+            </span>
+            <h2 className=' mb-3 text-3xl font-bold leading-[1.208] sm:text-4xl'>
+              Plans for you
+            </h2>
+            <p className='text-base-content/80'>
+              There are many variations of passages of Lorem Ipsum available but
+              the majority have suffered alteration in some form.
+            </p>
           </div>
         </div>
-        <GlowCapture>
-          <div className='group grid grid-cols-1 gap-6 pb-2 md:grid-cols-2 lg:grid-cols-4'>
-            {pricing?.map((plan, index) => (
-              <Glow key={index}>
-                <PricingCard plan={plan} />
-              </Glow>
-            ))}
-          </div>
-        </GlowCapture>
       </div>
-    </section>
+      <GlowCapture>
+        <div className='group grid grid-cols-1 gap-6 pb-2 md:grid-cols-2 lg:grid-cols-4'>
+          {pricing?.map((plan, index) => (
+            <Glow key={index}>
+              <PricingCard plan={plan} />
+            </Glow>
+          ))}
+        </div>
+      </GlowCapture>
+    </Container>
   )
 }
 

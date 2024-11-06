@@ -1,12 +1,14 @@
 'use client'
 
+import Container from '../common/Container'
+
 import { themes } from '@/data/themes'
 
 import Card from './Card'
 
 const Hero = () => {
   return (
-    <div className='mx-auto max-w-7xl px-2 text-center'>
+    <Container className='text-center'>
       <h2 className='mb-3 text-3xl font-bold leading-[1.208] sm:text-4xl'>
         Themes
       </h2>
@@ -17,7 +19,7 @@ const Hero = () => {
       <div className='mt-20 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4'>
         {themes?.map((theme, index) => <Card theme={theme} key={index} />)}
       </div>
-    </div>
+    </Container>
   )
 }
 

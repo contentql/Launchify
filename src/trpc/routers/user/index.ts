@@ -34,10 +34,13 @@ export const userRouter = router({
           data: updatedData,
         })
 
-        await payload.delete({
-          collection: 'media',
-          id: (ctx.user.imageUrl as Media).id,
-        })
+        {
+          ;(ctx.user.imageUrl as Media).id &&
+            (await payload.delete({
+              collection: 'media',
+              id: (ctx.user.imageUrl as Media).id,
+            }))
+        }
 
         return { data: user }
       } catch (error: any) {

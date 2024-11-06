@@ -1,8 +1,10 @@
+import Container from '../common/Container'
+
 import { Faqs } from '@/data/faqs'
 
 const Faq = () => {
   return (
-    <main className='mx-auto mt-20 max-w-7xl px-2'>
+    <Container className='mt-20'>
       <h1 className='mb-8 text-center text-3xl font-medium leading-normal lg:text-4xl xl:text-5xl'>
         Frequently Asked Questions
       </h1>
@@ -16,7 +18,7 @@ const Faq = () => {
           </div>
         ))}
       </div>
-    </main>
+    </Container>
   )
 }
 
