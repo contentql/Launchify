@@ -3,9 +3,15 @@
 import { Media, User } from '@payload-types'
 import Image from 'next/image'
 import { useState } from 'react'
-import { HiOutlinePencilAlt, HiUpload, HiX } from 'react-icons/hi'
+import { HiOutlinePencilAlt, HiUpload } from 'react-icons/hi'
 import { toast } from 'sonner'
 
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/common/Dialog'
 import { trpc } from '@/trpc/client'
 import uploadMedia from '@/utils/uploadMedia'
 
@@ -79,9 +85,14 @@ const Profile = ({ initialUser }: { initialUser: User | undefined }) => {
     }
   }
 
+  const userImg =
+    user?.imageUrl && typeof user?.imageUrl !== 'string'
+      ? user.imageUrl.url!
+      : user?.avatar!
+
   const userImageURL = user?.imageUrl
     ? (user?.imageUrl as Media)?.url!
-    : (user?.imageUrl! as string)
+    : (user?.avatar! as string)
   const latestProfilePic = uploadedImage ? uploadedImage : userImageURL
 
   return (
@@ -90,7 +101,7 @@ const Profile = ({ initialUser }: { initialUser: User | undefined }) => {
         <div className='group relative z-0 mx-auto h-[141px] w-[141px]'>
           <div
             style={{
-              backgroundImage: `url(${(user?.imageUrl as Media)?.url})`,
+              backgroundImage: `url(${userImg})`,
             }}
             className='z-0 h-full w-full rounded-full bg-base-200 bg-cover bg-center bg-no-repeat'></div>
           <button
@@ -113,88 +124,69 @@ const Profile = ({ initialUser }: { initialUser: User | undefined }) => {
           )}
         </div> */}
       </div>
-      {open && (
-        <div
-          className='relative z-[100]'
-          aria-labelledby='modal-title'
-          role='dialog'
-          aria-modal={false}>
-          <div className='fixed inset-0 bg-base-100 bg-opacity-75 transition-opacity'></div>
-
-          <div className='fixed inset-0 z-[100] w-screen overflow-y-auto'>
-            <div className='flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0'>
-              <div className='rounded-rounded-box relative transform overflow-hidden bg-base-300 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg'>
-                <div className='p-4 text-center'>
-                  <div className='group relative mx-auto mb-4 h-40 w-40'>
-                    <Image
-                      src={latestProfilePic}
-                      fill
-                      className='h-full w-full rounded-full bg-base-200 object-cover'
-                      alt='user profile'
-                    />
-                  </div>
-
-                  {open ? (
-                    <div className='flex items-center justify-center gap-x-5'>
-                      <label
-                        htmlFor='dropzone-file'
-                        className=' border-cq-input flex h-16 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed'>
-                        <div className='flex flex-col items-center justify-center pb-6 pt-5'>
-                          <svg
-                            className=' text-cq-text-secondary mb-1 mt-1 h-6 w-6'
-                            aria-hidden='true'
-                            xmlns='http://www.w3.org/2000/svg'
-                            fill='none'
-                            viewBox='0 0 20 16'>
-                            <path
-                              stroke='currentColor'
-                              stroke-linecap='round'
-                              stroke-linejoin='round'
-                              stroke-width='2'
-                              d='M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2'
-                            />
-                          </svg>
-                          <p className='text-sm text-gray-500 dark:text-gray-400'>
-                            <span className='text-cq-text-secondary font-semibold'>
-                              Click to Upload
-                            </span>
-                          </p>
-                        </div>
-                        <input
-                          id='dropzone-file'
-                          type='file'
-                          className='hidden'
-                          onChange={handleUpload}
-                        />
-                      </label>
-                    </div>
-                  ) : null}
-
-                  {uploadedImage && (
-                    <button
-                      className='mt-4 inline-flex w-full items-center justify-center gap-x-2 rounded-md bg-primary py-2.5'
-                      onClick={handleUpdateUserProfile}
-                      disabled={uploadingImage}>
-                      <HiUpload size={20} />
-                      {uploadingImage ? <p>Uploading...</p> : <p>Upload</p>}
-                    </button>
-                  )}
-                </div>
-                <div
-                  className='absolute right-2 top-2 cursor-pointer'
-                  onClick={() => {
-                    setOpen(false)
-                    setUserImage(null)
-                    setUploadedImage(null)
-                  }}>
-                  <HiX size={24} />
-                  <p className='sr-only'>Close</p>
-                </div>
-              </div>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Upload your image</DialogTitle>
+          </DialogHeader>
+          {latestProfilePic ? (
+            <div className='group relative mx-auto mb-4 h-40 w-40'>
+              <Image
+                src={latestProfilePic}
+                fill
+                className='h-full w-full rounded-full bg-base-200 object-cover'
+                alt='user profile'
+              />
             </div>
-          </div>
-        </div>
-      )}
+          ) : (
+            <div className='mx-auto  mb-4 h-40 w-40 rounded-full bg-base-200'></div>
+          )}
+          {open ? (
+            <div className='flex items-center justify-center gap-x-5'>
+              <label
+                htmlFor='dropzone-file'
+                className=' border-cq-input flex h-16 w-full cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed'>
+                <div className='flex flex-col items-center justify-center pb-6 pt-5'>
+                  <svg
+                    className=' text-cq-text-secondary mb-1 mt-1 h-6 w-6'
+                    aria-hidden='true'
+                    xmlns='http://www.w3.org/2000/svg'
+                    fill='none'
+                    viewBox='0 0 20 16'>
+                    <path
+                      stroke='currentColor'
+                      stroke-linecap='round'
+                      stroke-linejoin='round'
+                      stroke-width='2'
+                      d='M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2'
+                    />
+                  </svg>
+                  <p className='text-sm text-gray-500 dark:text-gray-400'>
+                    <span className='text-cq-text-secondary font-semibold'>
+                      Click to Upload
+                    </span>
+                  </p>
+                </div>
+                <input
+                  id='dropzone-file'
+                  type='file'
+                  className='hidden'
+                  onChange={handleUpload}
+                />
+              </label>
+            </div>
+          ) : null}
+          {uploadedImage && (
+            <button
+              className='mt-4 inline-flex w-full items-center justify-center gap-x-2 rounded-md bg-primary py-2.5'
+              onClick={handleUpdateUserProfile}
+              disabled={uploadingImage}>
+              <HiUpload size={20} />
+              {uploadingImage ? <p>Uploading...</p> : <p>Upload</p>}
+            </button>
+          )}
+        </DialogContent>
+      </Dialog>
     </>
   )
 }

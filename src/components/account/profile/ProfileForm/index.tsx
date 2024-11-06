@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
+import Input from '@/components/common/Input'
 import { trpc } from '@/trpc/client'
 
 import DeleteAccountSection from './DeleteAccountSection'
@@ -19,7 +20,7 @@ type ProfileFormDataType = z.infer<typeof ProfileFormSchema>
 
 const ProfileForm = ({ user }: { user: User }) => {
   const [formData, setFormData] = useState<ProfileFormDataType>({
-    // name: user?.username,
+    name: user?.displayName,
     password: '',
     confirmPassword: '',
   })
@@ -76,38 +77,67 @@ const ProfileForm = ({ user }: { user: User }) => {
           <form
             onSubmit={handleUserUpdateForm}
             className='mt-8 items-center sm:mt-14'>
-            {/* <div className='mb-4 sm:mb-6'>
-              <label
-                htmlFor='name'
-                className='block text-sm font-medium text-base-content/70'>
-                Name
-              </label>
-              <input
-                type='text'
-                id='name'
-                name='name'
-                placeholder='John'
-                value={user?.username || ''}
-                onChange={handleOnChange}
-                className='mt-1 w-full rounded-md bg-base-200 p-2 text-base-content transition-colors duration-300 focus:border-base-content/40 focus:outline-none focus:ring-1 focus:ring-base-content/40 focus:ring-offset-1'
-              />
-            </div> */}
-
-            <div className='mb-4 sm:mb-6'>
-              <label
-                htmlFor='email'
-                className='block text-sm font-medium text-base-content/70'>
-                E-Mail
-              </label>
-              <input
-                type='text'
-                id='email'
-                name='email'
-                placeholder='john.doe@example.com'
-                value={user?.email}
-                disabled
-                className='mt-1 w-full rounded-md bg-base-200 p-2 text-base-content transition-colors duration-300 focus:border-base-content/40 focus:outline-none focus:ring-1 focus:ring-base-content/40 focus:ring-offset-1'
-              />
+            <div className='mb-4 flex w-full flex-col items-center space-x-0 space-y-2 sm:mb-6 sm:flex-row sm:space-x-4 sm:space-y-0'>
+              <div className='w-full'>
+                <label
+                  htmlFor='name'
+                  className='block text-sm font-medium text-base-content/70'>
+                  Display name
+                </label>
+                <Input
+                  type='text'
+                  id='name'
+                  name='name'
+                  placeholder='Your name '
+                  value={formData?.name ?? ''}
+                  onChange={handleOnChange}
+                />
+              </div>
+              <div className='w-full'>
+                <label
+                  htmlFor='userId'
+                  className='block text-sm font-medium text-base-content/70'>
+                  UserId
+                </label>
+                <Input
+                  type='text'
+                  id='userId'
+                  name='userId'
+                  value={user?.id}
+                  onChange={handleOnChange}
+                />
+              </div>
+            </div>
+            <div className='mb-4 flex w-full flex-col items-center space-x-0 space-y-2 sm:mb-6 sm:flex-row sm:space-x-4 sm:space-y-0'>
+              <div className='w-full'>
+                <label
+                  htmlFor='username'
+                  className='block text-sm font-medium text-base-content/70'>
+                  Username
+                </label>
+                <Input
+                  type='text'
+                  id='username'
+                  name='username'
+                  value={user?.username!}
+                  disabled
+                />
+              </div>
+              <div className='w-full'>
+                <label
+                  htmlFor='email'
+                  className='block text-sm font-medium text-base-content/70'>
+                  E-Mail
+                </label>
+                <Input
+                  type='text'
+                  id='email'
+                  name='email'
+                  placeholder='john.doe@example.com'
+                  value={user?.email}
+                  disabled
+                />
+              </div>
             </div>
             <div className='mb-4 flex w-full flex-col items-center space-x-0 space-y-2 sm:mb-6 sm:flex-row sm:space-x-4 sm:space-y-0'>
               <div className='w-full'>
@@ -116,13 +146,12 @@ const ProfileForm = ({ user }: { user: User }) => {
                   className='block text-sm font-medium text-base-content/70'>
                   New Password
                 </label>
-                <input
+                <Input
                   type='password'
                   id='password'
                   name='password'
                   placeholder='● ● ● ● ● ● ● ● ●'
                   onChange={handleOnChange}
-                  className='mt-1 w-full rounded-md bg-base-200 p-2 text-base-content transition-colors duration-300 focus:border-base-content/40 focus:outline-none focus:ring-1 focus:ring-base-content/40 focus:ring-offset-1'
                 />
               </div>
               <div className='w-full'>
@@ -131,13 +160,12 @@ const ProfileForm = ({ user }: { user: User }) => {
                   className='block text-sm font-medium text-base-content/70'>
                   Confirm Password
                 </label>
-                <input
+                <Input
                   type='password'
                   id='confirmPassword'
                   name='confirmPassword'
                   placeholder='● ● ● ● ● ● ● ● ●'
                   onChange={handleOnChange}
-                  className='mt-1 w-full rounded-md bg-base-200 p-2 text-base-content transition-colors duration-300 focus:border-base-content/40 focus:outline-none focus:ring-1 focus:ring-base-content/40 focus:ring-offset-1'
                 />
               </div>
             </div>

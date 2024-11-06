@@ -1,18 +1,15 @@
 'use client'
 
-import { Media, User } from '@payload-types'
+import { User } from '@payload-types'
 import { AnimatePresence, motion } from 'framer-motion'
-import Image from 'next/image'
+import { SquareArrowOutUpLeft, UserRoundCog } from 'lucide-react'
 import Link, { LinkProps } from 'next/link'
-import { useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import React, { createContext, useContext, useState } from 'react'
-import { FaUser } from 'react-icons/fa'
-import { IoMdArrowBack } from 'react-icons/io'
 import { IoReorderThree } from 'react-icons/io5'
 import { RxCross2 } from 'react-icons/rx'
 
 import { cn } from '@/utils/cn'
-import { signOut } from '@/utils/signOut'
 
 interface Links {
   label: string
@@ -96,11 +93,11 @@ export const DesktopSidebar = ({
     <>
       <motion.div
         className={cn(
-          'hidden h-full w-[300px]  flex-shrink-0 bg-base-200 px-4 py-4 text-base-content md:flex md:flex-col',
+          'hidden h-full w-[300px]  flex-shrink-0 border bg-base-200 py-4 pl-2 text-base-content  backdrop-blur-lg [border-image:linear-gradient(to_right,theme(colors.slate.700/.3),theme(colors.slate.700),theme(colors.slate.700/.3))1] md:flex md:flex-col',
           className,
         )}
         animate={{
-          width: animate ? (open ? '300px' : '60px') : '300px',
+          width: animate ? (open ? '300px' : '80px') : '300px',
         }}
         onMouseEnter={() => setOpen(true)}
         onMouseLeave={() => setOpen(false)}
@@ -121,7 +118,7 @@ export const MobileSidebar = ({
     <>
       <div
         className={cn(
-          'flex h-16 w-full flex-row items-center  justify-between bg-base-100 px-4 py-4 md:hidden',
+          'fixed left-0 flex  w-full flex-row  items-center justify-between   bg-base-200  px-2 py-4 md:hidden',
         )}
         {...props}>
         <div className='z-20 flex w-full justify-end '>
@@ -142,7 +139,7 @@ export const MobileSidebar = ({
                 ease: 'easeInOut',
               }}
               className={cn(
-                'fixed inset-0 z-50 flex h-full w-full flex-col justify-between bg-base-100 p-10 text-base-content',
+                'fixed inset-0 z-50 flex h-full w-full flex-col justify-between bg-base-200 p-10 text-base-content',
                 className,
               )}>
               <div
@@ -168,13 +165,17 @@ export const SidebarLink = ({
   className?: string
   props?: LinkProps
 }) => {
+  const pathName = usePathname()
+  const { href } = link
   const { open, animate } = useSidebar()
   return (
     <Link
       href={link.href}
       className={cn(
-        'group/sidebar flex items-center justify-start  gap-2 py-2',
+        'group/sidebar flex items-center justify-start gap-2 rounded-md  hover:bg-base-100',
         className,
+        pathName === href ? 'bg-base-100 text-base-content' : null,
+        open ? 'px-4 py-3' : 'px-4 py-3',
       )}
       {...props}>
       {link.icon}
@@ -184,67 +185,20 @@ export const SidebarLink = ({
           display: animate ? (open ? 'inline-block' : 'none') : 'inline-block',
           opacity: animate ? (open ? 1 : 0) : 1,
         }}
-        className='text-neutral-700 dark:text-neutral-200 !m-0 inline-block whitespace-pre !p-0 text-sm transition duration-150 group-hover/sidebar:translate-x-1'>
+        className='!m-0 inline-block whitespace-pre !p-0 text-sm text-neutral-700 transition duration-150 group-hover/sidebar:translate-x-1 dark:text-neutral-200'>
         {link.label}
       </motion.span>
     </Link>
   )
 }
 
-export const SidebarButton = ({
-  button,
-  className,
-  ...props
-}: {
-  button: any
-  className?: string
-  props?: LinkProps
-}) => {
-  const { open, animate } = useSidebar()
-  return (
-    <button
-      onClick={button.function}
-      className={cn(
-        'group/sidebar flex items-center justify-start  gap-2 py-2',
-        className,
-      )}
-      {...props}>
-      {button.icon}
-
-      <motion.span
-        animate={{
-          display: animate ? (open ? 'inline-block' : 'none') : 'inline-block',
-          opacity: animate ? (open ? 1 : 0) : 1,
-        }}
-        className='text-neutral-700 dark:text-neutral-200 !m-0 inline-block whitespace-pre !p-0 text-sm transition duration-150 group-hover/sidebar:translate-x-1'>
-        {button.label}
-      </motion.span>
-    </button>
-  )
-}
-
 export function SidebarView({ user }: { user: User }) {
-  const router = useRouter()
-  const handleSignOut = () => {
-    signOut()
-    router.push('/')
-  }
   const links = [
     {
       label: 'Personal Information',
       href: '/profile',
       icon: (
-        <FaUser className='text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0' />
-      ),
-    },
-  ]
-
-  const buttons = [
-    {
-      label: 'Logout',
-      function: () => handleSignOut(),
-      icon: (
-        <IoMdArrowBack className='text-neutral-700 dark:text-neutral-200 h-5 w-5 flex-shrink-0' />
+        <UserRoundCog className='h-5 w-5 flex-shrink-0 text-base-content/80' />
       ),
     },
   ]
@@ -253,35 +207,25 @@ export function SidebarView({ user }: { user: User }) {
   return (
     <div
       className={cn(
-        'border-neutral-200  sticky top-0 overflow-hidden rounded-rounded-btn',
+        'sticky  top-0 overflow-hidden rounded-md',
         'z-50 max-h-screen', // for your use case, use `h-screen` instead of `h-[60vh]`
       )}>
       <Sidebar open={open} setOpen={setOpen} animate={true}>
         <SidebarBody className='justify-between gap-10'>
           <div className='flex flex-1 flex-col overflow-y-auto overflow-x-hidden'>
-            {open ? <Logo /> : <LogoIcon />}
             <div className='mt-8 flex flex-col gap-2'>
               {links.map((link, idx) => (
                 <SidebarLink key={idx} link={link} />
-              ))}
-              {buttons.map((button, idx) => (
-                <SidebarButton key={idx} button={button} />
               ))}
             </div>
           </div>
           <div>
             <SidebarLink
               link={{
-                label: user.username || '',
-                href: '#',
+                label: 'Back to dashboard',
+                href: '/dashboard',
                 icon: (
-                  <Image
-                    src={(user?.imageUrl as Media)?.url || ''}
-                    className='h-7 w-7 flex-shrink-0 rounded-full'
-                    width={50}
-                    height={50}
-                    alt='Avatar'
-                  />
+                  <SquareArrowOutUpLeft className='h-5 w-5 flex-shrink-0 text-base-content/80' />
                 ),
               }}
             />
@@ -289,41 +233,5 @@ export function SidebarView({ user }: { user: User }) {
         </SidebarBody>
       </Sidebar>
     </div>
-  )
-}
-export const Logo = () => {
-  return (
-    <Link
-      href='/'
-      className='relative z-20 flex items-center space-x-2 py-1  text-xl font-bold text-base-content'>
-      <Image
-        src='/favicon.ico'
-        className='h-7 w-7 flex-shrink-0 rounded-full'
-        width={60}
-        height={60}
-        alt='Avatar'
-      />
-      <motion.span
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className=''>
-        ContentQL
-      </motion.span>
-    </Link>
-  )
-}
-export const LogoIcon = () => {
-  return (
-    <Link
-      href='#'
-      className='relative z-20 flex items-center space-x-2 py-1 text-sm font-normal text-black'>
-      <Image
-        src='/favicon.ico'
-        className='h-7 w-7 flex-shrink-0 rounded-full'
-        width={60}
-        height={60}
-        alt='Avatar'
-      />
-    </Link>
   )
 }

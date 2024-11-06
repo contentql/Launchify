@@ -53,9 +53,9 @@ export const userRouter = router({
     .input(UpdateUserSchema)
     .mutation(async ({ input, ctx }) => {
       const { user } = ctx
-      const { confirmPassword, ...data } = input
+      const { confirmPassword, name, password } = input
 
-      if (data.password && data.password !== confirmPassword) {
+      if (password && password !== confirmPassword) {
         throw new TRPCError({
           code: 'BAD_REQUEST',
           message: 'Passwords do not match',
@@ -66,7 +66,10 @@ export const userRouter = router({
         const updatedUser = await payload.update({
           collection: 'users',
           id: user.id,
-          data,
+          data: {
+            displayName: name,
+            password: password,
+          },
         })
 
         return updatedUser
