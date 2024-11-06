@@ -5,6 +5,7 @@ import { useState } from 'react'
 import { toast } from 'sonner'
 import { z } from 'zod'
 
+import Button from '@/components/common/Button'
 import Input from '@/components/common/Input'
 import { trpc } from '@/trpc/client'
 
@@ -104,6 +105,7 @@ const ProfileForm = ({ user }: { user: User }) => {
                   id='userId'
                   name='userId'
                   value={user?.id}
+                  readOnly
                   onChange={handleOnChange}
                 />
               </div>
@@ -120,7 +122,7 @@ const ProfileForm = ({ user }: { user: User }) => {
                   id='username'
                   name='username'
                   value={user?.username!}
-                  disabled
+                  readOnly
                 />
               </div>
               <div className='w-full'>
@@ -135,7 +137,7 @@ const ProfileForm = ({ user }: { user: User }) => {
                   name='email'
                   placeholder='john.doe@example.com'
                   value={user?.email}
-                  disabled
+                  readOnly
                 />
               </div>
             </div>
@@ -171,11 +173,9 @@ const ProfileForm = ({ user }: { user: User }) => {
             </div>
 
             <div className='flex justify-end'>
-              <button
-                type='submit'
-                className='hover:bg-primary-focus w-full  rounded-lg bg-primary px-5 py-2.5 text-center text-sm font-medium text-base-content focus:outline-none focus:ring-4 focus:ring-primary/30 sm:w-auto'>
+              <Button type='submit'>
                 {isUpdateUserPending ? 'Updating...' : 'Update Profile'}
-              </button>
+              </Button>
             </div>
           </form>
         </div>

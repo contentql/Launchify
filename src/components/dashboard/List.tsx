@@ -26,12 +26,6 @@ const ListItem = ({
     slug: string
   }
 }) => {
-  const getRandomIcon = () => {
-    // const randomIndex = Math.floor(Math.random() * iconList.length)
-    //@ts-ignore
-    // const IconComponent = Icons[iconList[randomIndex]]
-    // return <IconComponent size={36} color='#7C3AED' strokeWidth={2} />
-  }
   return (
     <div className='card relative flex h-full w-full flex-col items-start justify-start gap-y-4  rounded-md bg-base-200 p-4 shadow-lg '>
       {/* {getRandomIcon()} */}
