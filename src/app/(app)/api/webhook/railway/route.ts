@@ -8,6 +8,8 @@ export async function POST(req: NextRequest) {
 
     const event = await req.json()
 
+    console.log('event in webhook', event)
+
     if (event.type === 'DEPLOY') {
       const projectId = event.project.id
       const deploymentStatus = event.status
