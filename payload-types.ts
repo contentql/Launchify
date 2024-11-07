@@ -13,6 +13,7 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
+    projects: Project;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -119,6 +120,33 @@ export interface Media {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "projects".
+ */
+export interface Project {
+  id: string;
+  name?: string | null;
+  projectDescription?: string | null;
+  serviceName?: string | null;
+  user?: {
+    relationTo: 'users';
+    value: string | User;
+  } | null;
+  projectId?: string | null;
+  serviceId?: string | null;
+  environmentId?: string | null;
+  serviceDomains?:
+    | {
+        domainUrl?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  deploymentStatus?: ('NOT_YET_DEPLOYED' | 'SUCCESS' | 'ERROR' | 'DEPLOYING') | null;
+  deleted?: boolean | null;
+  updatedAt: string;
+  createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
@@ -131,6 +159,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'media';
         value: string | Media;
+      } | null)
+    | ({
+        relationTo: 'projects';
+        value: string | Project;
       } | null);
   globalSlug?: string | null;
   user: {

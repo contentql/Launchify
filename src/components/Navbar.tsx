@@ -2,7 +2,7 @@
 
 import { User } from '@payload-types'
 import { motion, useMotionValueEvent, useScroll } from 'framer-motion'
-import { Flame } from 'lucide-react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
@@ -36,9 +36,14 @@ const Navbar = ({ user }: { user: User }) => {
       transition={{ duration: 0.5, ease: 'easeInOut' }}
       className=' fixed left-0 top-0 z-40 w-full border-b bg-base-200 py-4  backdrop-blur-lg [border-image:linear-gradient(to_right,theme(colors.slate.700/.3),theme(colors.slate.700),theme(colors.slate.700/.3))1]'>
       <div className='mx-auto flex max-w-7xl items-center justify-between  px-4 md:px-12 lg:px-20 '>
-        <Link href={'/'} className='inline-flex gap-x-2'>
-          <Flame fill='#10B981' color='#10B981' />
-          <h5 className='text-lg font-bold'>TranquilTech</h5>
+        <Link href={'/'} className='inline-flex h-auto w-28 gap-x-2'>
+          <Image
+            src='/logo.png'
+            alt='logo'
+            className='object-contain'
+            width={1000}
+            height={1000}
+          />
         </Link>
         {user ? (
           <ul className='flex items-center justify-end'>

@@ -8,6 +8,7 @@ import sharp from 'sharp'
 import { fileURLToPath } from 'url'
 
 import { Media } from '@/payload/collections/Media'
+import { Projects } from '@/payload/collections/Projects'
 import { Users } from '@/payload/collections/Users'
 
 const filename = fileURLToPath(import.meta.url)
@@ -64,7 +65,7 @@ export default buildConfig({
   admin: {
     user: Users.slug,
   },
-  collections: [Users, Media],
+  collections: [Users, Media, Projects],
   db: mongooseAdapter({
     url: env.DATABASE_URI,
   }),
