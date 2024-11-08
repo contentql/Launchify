@@ -4,7 +4,11 @@ import { TRPCError } from '@trpc/server'
 
 import { router, userProcedure } from '@/trpc'
 
-import { ProjectCreationSchema, getProjectsSchema } from './validator'
+import {
+  ProjectCreationSchema,
+  getLatestSchema,
+  getProjectsSchema,
+} from './validator'
 
 const payload = await getPayloadHMR({ config: configPromise })
 
@@ -93,6 +97,23 @@ export const projectRouter = router({
           code: 'INTERNAL_SERVER_ERROR',
           message: error?.message || 'Internal server error occurred.',
         })
+      }
+    }),
+
+  getLatestProject: userProcedure
+    ?.input(getLatestSchema)
+    .query(async ({ ctx, input }) => {
+      try {
+        const { id } = input
+        const { user } = ctx
+
+        const project = await payload?.findByID({
+          collection: 'projects',
+          id: id,
+        })
+        return project
+      } catch (error) {
+        console.log('Error while getting latest project')
       }
     }),
 })
