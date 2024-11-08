@@ -78,6 +78,7 @@ export const projectRouter = router({
           throw new TRPCError({
             code: 'CONFLICT',
             message: 'Project name already exists',
+            cause: 'Duplicated project names',
           })
         }
         await payload.create({

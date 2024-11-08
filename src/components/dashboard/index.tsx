@@ -92,16 +92,15 @@ const DashboardView = () => {
     isError: isProjectCreationError,
   } = trpc.project?.createProject.useMutation({
     onSuccess: () => {
-      toast?.success(`project created successfully`)
+      toast?.success(`Project created successfully`)
       refetch()
       setOpen(false)
     },
-    onError: async error => {
-      console.log('Error', error)
+    onError: error => {
       if (error.data?.code === 'CONFLICT') {
         setError('name', { message: error.message })
       }
-      toast?.error(`failed to create project`)
+      toast?.error(`Failed to create project: ${error?.message}`)
     },
   })
   const onsubmit = (data: ProjectSchemaType) => {
