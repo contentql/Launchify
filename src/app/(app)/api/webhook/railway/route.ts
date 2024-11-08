@@ -11,7 +11,7 @@ export async function POST(req: NextRequest) {
     console.log('event in webhook', event)
 
     if (event.type === 'DEPLOY') {
-      const projectId = event.project.id
+      const serviceId = event.service.id
       const deploymentStatus = event.status
       const deploymentStatuses = [
         'NOT_YET_DEPLOYED',
@@ -27,8 +27,8 @@ export async function POST(req: NextRequest) {
             deploymentStatus,
           },
           where: {
-            projectId: {
-              equals: projectId,
+            serviceId: {
+              equals: serviceId,
             },
           },
         })
