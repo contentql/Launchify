@@ -5,10 +5,12 @@ import { getServiceDomains } from '@/railway'
 export const updateServiceDomain: CollectionAfterChangeHook = async ({
   collection,
   doc,
+  req,
   operation,
   previousDoc,
 }) => {
   if (operation === 'update') {
+    const { payload } = req
     if (
       previousDoc?.deploymentStatus != doc?.deploymentStatus &&
       (doc?.deploymentStatus === 'SUCCESS' || doc?.deploymentStatus === 'Error')
@@ -24,6 +26,22 @@ export const updateServiceDomain: CollectionAfterChangeHook = async ({
         if (!Array.isArray(doc.serviceDomains)) {
           doc.serviceDomains = []
         }
+
+        payload?.update({
+          collection: 'projects',
+          where: {
+            serviceId: {
+              equals: doc?.serviceId,
+            },
+          },
+          data: {
+            serviceDomains: [
+              {
+                domainUrl: serviceDomains.at(0).domain,
+              },
+            ],
+          },
+        })
 
         doc.serviceDomains.push({ domainUrl: serviceDomains.at(0).domain })
       } catch (error) {
