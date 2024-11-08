@@ -118,15 +118,19 @@ export const MobileSidebar = ({
     <>
       <div
         className={cn(
-          'fixed left-0 flex  w-full flex-row  items-center justify-between   bg-base-200  px-2 py-4 md:hidden',
+          'static z-0 flex w-full flex-row items-center  justify-between bg-transparent   px-2  py-4 pt-24 md:hidden',
         )}
         {...props}>
-        <div className='z-20 flex w-full justify-end '>
-          <IoReorderThree
-            size={28}
-            className='font-bold text-base-content'
-            onClick={() => setOpen(!open)}
-          />
+        <div className='relative w-full space-y-2'>
+          <div className='z-0 flex w-full justify-start gap-x-4'>
+            <IoReorderThree
+              size={28}
+              className='font-bold text-base-content'
+              onClick={() => setOpen(!open)}
+            />
+            <p className='text-md font-semibold text-base-content'>Account</p>
+          </div>
+          <div className='w-full border-[1px] border-b border-base-content/40 '></div>
         </div>
         <AnimatePresence>
           {open && (
@@ -139,7 +143,7 @@ export const MobileSidebar = ({
                 ease: 'easeInOut',
               }}
               className={cn(
-                'fixed inset-0 z-50 flex h-full w-full flex-col justify-between bg-base-200 p-10 text-base-content',
+                'fixed inset-0 top-0  z-50 flex h-[100vh-5rem] w-full flex-col justify-between bg-base-200 p-10 text-base-content',
                 className,
               )}>
               <div
@@ -207,8 +211,8 @@ export function SidebarView({ user }: { user: User }) {
   return (
     <div
       className={cn(
-        'sticky  top-0 overflow-hidden rounded-md',
-        'z-50 max-h-screen', // for your use case, use `h-screen` instead of `h-[60vh]`
+        ' static overflow-hidden rounded-md md:sticky md:top-16',
+        'z-50 md:h-[calc(100vh-4rem)]', // for your use case, use `h-screen` instead of `h-[60vh]`
       )}>
       <Sidebar open={open} setOpen={setOpen} animate={true}>
         <SidebarBody className='justify-between gap-10'>

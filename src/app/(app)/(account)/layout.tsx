@@ -1,5 +1,6 @@
 import { headers } from 'next/headers'
 
+import Navbar from '@/components/Navbar'
 import { getCurrentUser } from '@/utils/getCurrentUser'
 
 interface LayoutProps {
@@ -14,6 +15,7 @@ const AccountLayout: React.FC<LayoutProps> = async ({ children }) => {
 
   return (
     <div className='flex min-h-screen flex-col'>
+      <Navbar user={user} />
       <div className='flex-grow'>{children}</div>
       {/* Footer */}
     </div>

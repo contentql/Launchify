@@ -34,9 +34,9 @@ const Navbar = ({ user }: { user: User }) => {
       }}
       animate={hidden ? 'hidden' : 'visible'}
       transition={{ duration: 0.5, ease: 'easeInOut' }}
-      className=' fixed left-0 top-0 z-40 w-full border-b bg-base-200 py-4  backdrop-blur-lg [border-image:linear-gradient(to_right,theme(colors.slate.700/.3),theme(colors.slate.700),theme(colors.slate.700/.3))1]'>
+      className=' fixed left-0 top-0 z-50 h-16 w-full border-b bg-base-200 py-3  backdrop-blur-lg [border-image:linear-gradient(to_right,theme(colors.slate.700/.3),theme(colors.slate.700),theme(colors.slate.700/.3))1]'>
       <div className='mx-auto flex max-w-7xl items-center justify-between  px-4 md:px-12 lg:px-20 '>
-        <Link href={'/'} className='inline-flex h-auto w-28 gap-x-2'>
+        <Link href={'/'} className='inline-flex h-10 w-28 gap-x-2'>
           <Image
             src='/logo.png'
             alt='logo'

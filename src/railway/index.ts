@@ -31,7 +31,7 @@ export const templateDeploy = async (input: TemplateDeployType) => {
           services: {
             '488d104a-7fa8-4007-82c2-23eb2a3c0af5': {
               icon: 'https://devicons.railway.app/i/mysql.svg',
-              name: 'MySQL',
+              name: `${name}-MySQL`,
               build: {},
               deploy: {
                 startCommand:
