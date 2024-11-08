@@ -85,13 +85,14 @@ export const projectRouter = router({
             cause: 'Duplicated project names',
           })
         }
-        await payload.create({
+        const projectData = await payload.create({
           collection: 'projects',
           data: {
             name: name,
             projectDescription: description,
           },
         })
+        return projectData
       } catch (error: any) {
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
@@ -102,7 +103,7 @@ export const projectRouter = router({
 
   getLatestProject: userProcedure
     ?.input(getLatestSchema)
-    .query(async ({ ctx, input }) => {
+    .mutation(async ({ ctx, input }) => {
       try {
         const { id } = input
         const { user } = ctx

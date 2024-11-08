@@ -86,14 +86,35 @@ const DashboardView = () => {
 
   const allProjects = projects?.pages?.map(page => page?.projects).flat()
 
+  const { mutate: getLatestProject } =
+    trpc?.project?.getLatestProject?.useMutation()
+
   const {
     mutate: createProject,
     isPending: isProjectCreationPending,
     isError: isProjectCreationError,
   } = trpc.project?.createProject.useMutation({
-    onSuccess: () => {
+    onSuccess: data => {
+      console.log('Project Created data', data)
+      getLatestProject({
+        id: data?.id,
+      })
+
+      let count = 0
+      const intervalId = setInterval(() => {
+        if (count < 5) {
+          getLatestProject({
+            id: data?.id,
+          })
+          count++
+        } else {
+          clearInterval(intervalId) // Stop the interval after 5 iterations
+        }
+      }, 10000) // 10 seconds
+
       toast?.success(`Project created successfully`)
       refetch()
+
       setOpen(false)
     },
     onError: error => {
@@ -104,7 +125,6 @@ const DashboardView = () => {
     },
   })
   const onsubmit = (data: ProjectSchemaType) => {
-    console.log('data', data)
     createProject({
       description: data?.description,
       name: data?.name,
