@@ -9,6 +9,7 @@ import { fileURLToPath } from 'url'
 
 import { Media } from '@/payload/collections/Media'
 import { Projects } from '@/payload/collections/Projects'
+import { Services } from '@/payload/collections/Services'
 import { Users } from '@/payload/collections/Users'
 
 const filename = fileURLToPath(import.meta.url)
@@ -65,7 +66,7 @@ export default buildConfig({
   admin: {
     user: Users.slug,
   },
-  collections: [Users, Media, Projects],
+  collections: [Users, Media, Projects, Services],
   db: mongooseAdapter({
     url: env.DATABASE_URI,
   }),

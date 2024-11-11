@@ -1,37 +1,59 @@
 import { railwayAPI } from '@/utils/railwayAPI'
-import {
-  ENVIRONMENT_ID,
-  PROJECT_ID,
-  TEAM_ID,
-  TEMPLATE_ID,
-} from '@/utils/railwayConstants'
+import { TEAM_ID, TEMPLATE_ID } from '@/utils/railwayConstants'
 
 import { CREATE_SERVICE_DOMAIN } from './queries/createServiceDomain'
 import { GET_PROJECT_DETAILS } from './queries/getProjectDetails'
 import { GET_SERVICE_DOMAINS } from './queries/getServiceDomains'
+import { CREATE_EMPTY_PROJECT } from './queries/project/createEmptyProject'
 import { TEMPLATE_DEPLOY } from './queries/templateDeploy'
+import { GET_VARIABLES } from './queries/variables/getVariables'
 import { CREATE_WEBHOOK } from './queries/webhook/createWebhook'
 import {
+  CreateEmptyProjectType,
   CreateServiceDomainType,
   CreateWebhookType,
   TemplateDeployType,
   getServiceDomainsSchemaType,
+  getVariablesSchemaType,
 } from './validator'
 
+export const createEmptyProject = async (input: CreateEmptyProjectType) => {
+  const { projectName, projectDescription } = input
+
+  const queryVariables = {
+    input: {
+      name: projectName,
+      description: projectDescription,
+      defaultEnvironmentName: 'production',
+    },
+  }
+
+  try {
+    const response = await railwayAPI({
+      query: CREATE_EMPTY_PROJECT,
+      variables: queryVariables,
+    })
+
+    return response.data.projectCreate
+  } catch (error: any) {
+    throw new Error('Error during creating empty project: ', error)
+  }
+}
+
 export const templateDeploy = async (input: TemplateDeployType) => {
-  const { name } = input
+  const { environmentId, projectId } = input
   try {
     const queryVariables = {
       input: {
-        projectId: PROJECT_ID,
-        environmentId: ENVIRONMENT_ID,
+        projectId: projectId,
+        environmentId: environmentId,
         templateId: TEMPLATE_ID,
         teamId: TEAM_ID,
         serializedConfig: {
           services: {
             '488d104a-7fa8-4007-82c2-23eb2a3c0af5': {
               icon: 'https://devicons.railway.app/i/mysql.svg',
-              name: `${name}-MySQL`,
+              name: 'MySQL',
               build: {},
               deploy: {
                 startCommand:
@@ -106,7 +128,7 @@ export const templateDeploy = async (input: TemplateDeployType) => {
               },
             },
             '5944d643-ffdd-4738-8fb5-37043559cc9b': {
-              name: name,
+              name: 'Ghost',
               build: {},
               deploy: {},
               source: {
@@ -249,8 +271,6 @@ export const getServiceDomains = async (input: getServiceDomainsSchemaType) => {
   const queryVariables = {
     input,
   }
-  console.log('data inputs', queryVariables)
-
   try {
     const response = await railwayAPI({
       query: GET_SERVICE_DOMAINS,
@@ -283,5 +303,21 @@ export const createWebhook = async (input: CreateWebhookType) => {
     return response.data.webhookCreate
   } catch (error: any) {
     throw new Error('Error during creating webhook: ', error)
+  }
+}
+
+export const getVariables = async (input: getVariablesSchemaType) => {
+  const queryVariables = {
+    input,
+  }
+  try {
+    const response = await railwayAPI({
+      query: GET_VARIABLES,
+      variables: queryVariables?.input,
+    })
+
+    return response.data
+  } catch (error: any) {
+    throw new Error('Error during getting domains: ', error)
   }
 }
