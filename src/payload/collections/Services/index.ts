@@ -7,7 +7,7 @@ import { updateServiceDomain } from './hooks/updateServiceDomain'
 export const Services: CollectionConfig = {
   slug: 'services',
   admin: {
-    useAsTitle: 'name',
+    useAsTitle: 'serviceName',
     group: 'Core',
   },
   access: {
@@ -20,13 +20,11 @@ export const Services: CollectionConfig = {
   },
   fields: [
     {
-      name: 'name',
+      name: 'serviceName',
       type: 'text',
       label: 'Name',
-      // required: true,
-      // unique: true,
+
       admin: {
-        position: undefined,
         description: 'Name of the service.',
       },
     },

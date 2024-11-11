@@ -57,14 +57,14 @@ export const createService: CollectionAfterChangeHook = async ({
           const formattedVariables = Object.entries(variables?.variables).map(
             ([key, value]) => ({
               key,
-              value: value as string | null | undefined,
+              value: value as any,
             }),
           )
           console.log('New varaibles', formattedVariables)
           await payload.create({
             collection: 'services',
             data: {
-              name: service?.node?.name,
+              serviceName: service?.node?.name,
               icon: service?.node?.icon,
               serviceId: service?.node?.id,
               projectId: service?.node?.projectId,

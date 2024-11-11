@@ -146,7 +146,7 @@ export interface Project {
  */
 export interface Service {
   id: string;
-  name?: string | null;
+  serviceName?: string | null;
   icon?: string | null;
   project?: (string | null) | Project;
   variables?:
