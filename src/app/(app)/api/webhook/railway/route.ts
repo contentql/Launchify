@@ -22,30 +22,17 @@ export async function POST(req: NextRequest) {
       ]
 
       if (deploymentStatuses.includes(deploymentStatus)) {
-        await Promise.all([
-          payload.update({
-            collection: 'projects',
-            data: {
-              deploymentStatus,
+        await payload.update({
+          collection: 'services',
+          data: {
+            deploymentStatus,
+          },
+          where: {
+            serviceId: {
+              equals: serviceId,
             },
-            where: {
-              projectId: {
-                equals: projectId,
-              },
-            },
-          }),
-          payload.update({
-            collection: 'services',
-            data: {
-              deploymentStatus,
-            },
-            where: {
-              serviceId: {
-                equals: serviceId,
-              },
-            },
-          }),
-        ])
+          },
+        })
       }
     }
 
