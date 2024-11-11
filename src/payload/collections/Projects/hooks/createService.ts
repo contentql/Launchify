@@ -69,7 +69,7 @@ export const createService: CollectionAfterChangeHook = async ({
               serviceId: service?.node?.id,
               projectId: service?.node?.projectId,
               environmentId: doc.environmentId,
-              project: { relationTo: 'projects', value: doc?.id },
+              project: doc?.id,
               variables: formattedVariables,
             },
           })

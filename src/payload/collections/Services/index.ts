@@ -38,8 +38,7 @@ export const Services: CollectionConfig = {
     {
       name: 'project',
       type: 'relationship',
-      relationTo: ['projects'],
-      label: 'Project',
+      relationTo: 'projects',
     },
     // {
     //   name: 'user',

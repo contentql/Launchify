@@ -148,10 +148,7 @@ export interface Service {
   id: string;
   name?: string | null;
   icon?: string | null;
-  project?: {
-    relationTo: 'projects';
-    value: string | Project;
-  } | null;
+  project?: (string | null) | Project;
   variables?:
     | {
         key?: string | null;
