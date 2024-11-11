@@ -1,9 +1,7 @@
 'use client'
 
 // import * as Icons from 'lucide-react'
-import { Skeleton } from '../common/Skeleton'
 import { Project } from '@payload-types'
-import { SquareArrowOutUpRight } from 'lucide-react'
 import Link from 'next/link'
 
 // const iconList = Object.keys(Icons)
@@ -46,16 +44,16 @@ const ListItem = ({ site }: { site: Project }) => {
     <Link
       href={`/dashboard/project/${site?.name}`}
       className='card relative flex h-48 w-full flex-col items-start justify-between gap-y-2  rounded-md bg-base-200 p-4 shadow-lg '>
-      <div className='absolute right-4 top-4'>
+      {/* <div className='absolute right-4 top-4'>
         {Component[site?.deploymentStatus!]}
-      </div>
+      </div> */}
       <div className='space-y-2'>
         <h2 className='cur text-lg font-semibold '>{site?.name}</h2>
         <p className='line-clamp-2 text-sm text-base-content/80'>
           {site?.projectDescription}
         </p>
       </div>
-      {site?.deploymentStatus === 'DEPLOYING' ||
+      {/* {site?.deploymentStatus === 'DEPLOYING' ||
       site?.deploymentStatus === 'NOT_YET_DEPLOYED' ? (
         <Skeleton className='h-6 w-full' />
       ) : (
@@ -82,7 +80,7 @@ const ListItem = ({ site }: { site: Project }) => {
             </Link>
           )}
         </div>
-      )}
+      )} */}
     </Link>
   )
 }
