@@ -29,11 +29,6 @@ export const projectRouter = router({
           where: {
             and: [
               {
-                deleted: {
-                  equals: false,
-                },
-              },
-              {
                 ...(!user.role?.includes('admin') && {
                   'user.value': {
                     equals: user.id,
