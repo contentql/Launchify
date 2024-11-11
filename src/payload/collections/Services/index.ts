@@ -24,7 +24,7 @@ export const Services: CollectionConfig = {
       type: 'text',
       label: 'Name',
       // required: true,
-      unique: true,
+      // unique: true,
       admin: {
         position: undefined,
         description: 'Name of the service.',
