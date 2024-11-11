@@ -1,6 +1,6 @@
 import { CollectionAfterChangeHook } from 'payload'
 
-import { getProjectDetails, getVariables } from '@/railway'
+import { getProjectDetails } from '@/railway'
 
 export const createService: CollectionAfterChangeHook = async ({
   operation,
@@ -47,20 +47,6 @@ export const createService: CollectionAfterChangeHook = async ({
       const services = await waitForService(doc?.projectId)
       if (services) {
         for (const service of services) {
-          const variables = await getVariables({
-            serviceId: service?.node?.id,
-            projectId: service?.node?.projectId,
-            environmentId: doc.environmentId,
-          })
-
-          console.log('varaibles', variables)
-          const formattedVariables = Object.entries(variables?.variables).map(
-            ([key, value]) => ({
-              key,
-              value: value as any,
-            }),
-          )
-          console.log('New varaibles', formattedVariables)
           await payload.create({
             collection: 'services',
             data: {
@@ -70,7 +56,6 @@ export const createService: CollectionAfterChangeHook = async ({
               projectId: service?.node?.projectId,
               environmentId: doc.environmentId,
               project: doc?.id,
-              variables: formattedVariables,
             },
           })
         }

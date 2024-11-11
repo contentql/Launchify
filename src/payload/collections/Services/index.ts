@@ -1,7 +1,5 @@
 import { CollectionConfig } from 'payload'
 
-import { updateServiceDomain } from './hooks/updateServiceDomain'
-
 // import { assignUserId } from './field-level-hooks/assignUserId'
 
 export const Services: CollectionConfig = {
@@ -15,9 +13,7 @@ export const Services: CollectionConfig = {
     update: () => true,
     read: () => true,
   },
-  hooks: {
-    afterChange: [updateServiceDomain],
-  },
+
   fields: [
     {
       name: 'serviceName',
