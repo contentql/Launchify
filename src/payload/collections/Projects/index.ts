@@ -1,10 +1,9 @@
 import { User } from '@payload-types'
 import { CollectionConfig } from 'payload'
 
-import { slugField } from '@/payload/fields/slug'
-
 import { isAdminOrCurrentUser } from './access'
 import { createGhostTemplate } from './hooks/createGhostTemplate'
+import { createService } from './hooks/createService'
 import { updateServiceDomain } from './hooks/updateServiceDomain'
 
 // import { assignUserId } from './field-level-hooks/assignUserId'
@@ -23,7 +22,7 @@ export const Projects: CollectionConfig = {
 
   hooks: {
     beforeChange: [createGhostTemplate],
-    afterChange: [updateServiceDomain],
+    afterChange: [updateServiceDomain, createService],
   },
 
   fields: [
@@ -47,20 +46,12 @@ export const Projects: CollectionConfig = {
         placeholder: 'Enter the Description of the railway project',
       },
     },
-    slugField({
-      fieldToUse: 'serviceName',
-      overrides: {
-        name: 'serviceName',
-        type: 'text',
-        label: 'Service Name',
-        unique: true,
-        admin: {
-          position: undefined,
-          description: 'Name of the railway service.',
-          placeholder: 'Enter the name of the railway service',
-        },
-      },
-    }),
+    {
+      type: 'join',
+      name: 'Services',
+      collection: 'services',
+      on: 'project',
+    },
     {
       name: 'user',
       label: 'User',

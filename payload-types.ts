@@ -127,7 +127,10 @@ export interface Project {
   id: string;
   name?: string | null;
   projectDescription?: string | null;
-  serviceName?: string | null;
+  Services?: {
+    docs?: (string | Service)[] | null;
+    hasNextPage?: boolean | null;
+  } | null;
   user?: {
     relationTo: 'users';
     value: string | User;
@@ -153,9 +156,10 @@ export interface Project {
 export interface Service {
   id: string;
   name?: string | null;
-  user?: {
-    relationTo: 'users';
-    value: string | User;
+  icon?: string | null;
+  project?: {
+    relationTo: 'projects';
+    value: string | Project;
   } | null;
   variables?:
     | {

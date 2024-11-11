@@ -1,6 +1,6 @@
-import { User } from '@payload-types'
 import { CollectionConfig } from 'payload'
 
+import { updateServiceDomain } from './hooks/updateServiceDomain'
 import { updateVariables } from './hooks/updateVaraibles'
 
 // import { assignUserId } from './field-level-hooks/assignUserId'
@@ -17,7 +17,7 @@ export const Services: CollectionConfig = {
     read: () => true,
   },
   hooks: {
-    afterChange: [updateVariables],
+    afterChange: [updateVariables, updateServiceDomain],
   },
   fields: [
     {
@@ -32,21 +32,32 @@ export const Services: CollectionConfig = {
       },
     },
     {
-      name: 'user',
-      label: 'User',
-      type: 'relationship',
-      relationTo: ['users'],
-      hasMany: false,
-      defaultValue: ({ user }: { user: User }) => {
-        if (!user) return undefined
-
-        return { relationTo: 'users', value: user?.id }
-      },
-      admin: {
-        position: 'sidebar',
-        description: 'Select the user associated with this project.',
-      },
+      name: 'icon',
+      type: 'text',
+      label: 'Icon',
     },
+    {
+      name: 'project',
+      type: 'relationship',
+      relationTo: ['projects'],
+      label: 'Project',
+    },
+    // {
+    //   name: 'user',
+    //   label: 'User',
+    //   type: 'relationship',
+    //   relationTo: ['users'],
+    //   hasMany: false,
+    //   defaultValue: ({ user }: { user: User }) => {
+    //     if (!user) return undefined
+
+    //     return { relationTo: 'users', value: user?.id }
+    //   },
+    //   admin: {
+    //     position: 'sidebar',
+    //     description: 'Select the user associated with this project.',
+    //   },
+    // },
     {
       name: 'variables',
       label: 'Variables',
