@@ -4,7 +4,6 @@ import { CollectionConfig } from 'payload'
 import { isAdminOrCurrentUser } from './access'
 import { createGhostTemplate } from './hooks/createGhostTemplate'
 import { createService } from './hooks/createService'
-import { updateServiceDomain } from './hooks/updateServiceDomain'
 
 // import { assignUserId } from './field-level-hooks/assignUserId'
 
@@ -22,7 +21,7 @@ export const Projects: CollectionConfig = {
 
   hooks: {
     beforeChange: [createGhostTemplate],
-    afterChange: [updateServiceDomain, createService],
+    afterChange: [createService],
   },
 
   fields: [
@@ -82,16 +81,6 @@ export const Projects: CollectionConfig = {
           },
         },
         {
-          name: 'serviceId',
-          type: 'text',
-          label: 'Service Id',
-          admin: {
-            description:
-              'The unique identifier for the railway project service.',
-            placeholder: 'Auto-generated after project creation',
-          },
-        },
-        {
           name: 'environmentId',
           type: 'text',
           label: 'Environment Id',
@@ -99,63 +88,6 @@ export const Projects: CollectionConfig = {
             description:
               'The unique identifier for the railway project environment.',
             placeholder: 'Auto-generated after project creation',
-          },
-        },
-        {
-          name: 'serviceDomains',
-          type: 'array',
-          label: 'Service domains',
-          fields: [
-            {
-              name: 'domainUrl',
-              type: 'text',
-              label: 'Domain URL',
-              admin: {
-                description: 'The URL of your railway domain.',
-                placeholder: 'e.g., example.com',
-              },
-            },
-          ],
-          admin: {
-            readOnly: true,
-          },
-        },
-        {
-          name: 'deploymentStatus',
-          type: 'select',
-          label: 'Deployment Status',
-          options: [
-            {
-              label: 'Not Yet Deployed',
-              value: 'NOT_YET_DEPLOYED',
-            },
-            {
-              label: 'Success',
-              value: 'SUCCESS',
-            },
-            {
-              label: 'Error',
-              value: 'ERROR',
-            },
-            {
-              label: 'Deploying',
-              value: 'DEPLOYING',
-            },
-          ],
-          defaultValue: 'NOT_YET_DEPLOYED',
-          admin: {
-            description:
-              'Select the current deployment status of the project in Railway.',
-          },
-        },
-        {
-          name: 'deleted',
-          type: 'checkbox',
-          label: 'Deleted',
-          defaultValue: false,
-          admin: {
-            readOnly: false,
-            description: 'Boolean to identify project deletion in railway.',
           },
         },
       ],

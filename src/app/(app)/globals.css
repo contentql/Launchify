@@ -94,3 +94,12 @@
   background-color: #7c3aed33;
   border: 2px solid #6d28d9;
 }
+
+hide-scroll-bar::-webkit-scrollbar {
+  display: none;
+}
+
+hide-scroll-bar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

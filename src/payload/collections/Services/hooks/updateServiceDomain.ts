@@ -28,7 +28,7 @@ export const updateServiceDomain: CollectionAfterChangeHook = async ({
         }
 
         if (serviceDomains?.length > 0) {
-          payload?.update({
+          await payload?.update({
             collection: 'services',
             where: {
               id: {

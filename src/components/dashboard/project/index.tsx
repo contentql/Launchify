@@ -31,7 +31,7 @@ const ProjectDetailsView = ({ slug }: { slug: any }) => {
           onEscapeKeyDown={event => event.preventDefault()}
           onCloseAutoFocus={() => router?.replace('/dashboard/project/i')}
           onInteractOutside={() => router?.replace('/dashboard/project/i')}
-          className='min-w-[70%] overflow-scroll'>
+          className='hide-scroll-bar min-w-[70%] overflow-scroll'>
           <SheetHeader>
             <SheetTitle className='inline-flex items-center gap-x-2'>
               <DatabaseZap size={20} />

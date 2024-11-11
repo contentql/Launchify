@@ -136,16 +136,7 @@ export interface Project {
     value: string | User;
   } | null;
   projectId?: string | null;
-  serviceId?: string | null;
   environmentId?: string | null;
-  serviceDomains?:
-    | {
-        domainUrl?: string | null;
-        id?: string | null;
-      }[]
-    | null;
-  deploymentStatus?: ('NOT_YET_DEPLOYED' | 'SUCCESS' | 'ERROR' | 'DEPLOYING') | null;
-  deleted?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }
