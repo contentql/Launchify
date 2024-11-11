@@ -11,6 +11,7 @@ export async function POST(req: NextRequest) {
     console.log('event in webhook', event)
 
     if (event.type === 'DEPLOY') {
+      const projectId = event.id
       const serviceId = event.service.id
       const deploymentStatus = event.status
       const deploymentStatuses = [
@@ -21,17 +22,30 @@ export async function POST(req: NextRequest) {
       ]
 
       if (deploymentStatuses.includes(deploymentStatus)) {
-        await payload.update({
-          collection: 'projects',
-          data: {
-            deploymentStatus,
-          },
-          where: {
-            serviceId: {
-              equals: serviceId,
+        await Promise.all([
+          payload.update({
+            collection: 'projects',
+            data: {
+              deploymentStatus,
             },
-          },
-        })
+            where: {
+              projectId: {
+                equals: projectId,
+              },
+            },
+          }),
+          payload.update({
+            collection: 'services',
+            data: {
+              deploymentStatus,
+            },
+            where: {
+              serviceId: {
+                equals: serviceId,
+              },
+            },
+          }),
+        ])
       }
     }
 
