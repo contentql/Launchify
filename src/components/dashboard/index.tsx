@@ -86,9 +86,6 @@ const DashboardView = () => {
 
   const allProjects = projects?.pages?.map(page => page?.projects).flat()
 
-  const { mutate: getLatestProject } =
-    trpc?.project?.getLatestProject?.useMutation()
-
   const {
     mutate: createProject,
     isPending: isProjectCreationPending,

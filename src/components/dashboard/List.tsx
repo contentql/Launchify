@@ -42,17 +42,17 @@ const ListItem = ({ site }: { site: Project }) => {
   }
   return (
     <Link
-      href={`/dashboard/project/${site?.name}`}
-      className='card relative flex h-48 w-full flex-col items-start justify-between gap-y-2  rounded-md bg-base-200 p-4 shadow-lg '>
-      {/* <div className='absolute right-4 top-4'>
-        {Component[site?.deploymentStatus!]}
-      </div> */}
+      href={`/dashboard/project/${site?.id}`}
+      className='card relative flex h-48 w-full flex-col items-start justify-between gap-y-2 rounded-md bg-base-200 p-4  shadow-lg transition-all duration-300 hover:border-none '>
       <div className='space-y-2'>
         <h2 className='cur text-lg font-semibold '>{site?.name}</h2>
         <p className='line-clamp-2 text-sm text-base-content/80'>
           {site?.projectDescription}
         </p>
       </div>
+      <p className='inline-flex items-center  justify-start gap-x-2 text-sm text-base-content/80'>
+        {site?.Services?.docs?.length} Services
+      </p>
       {/* {site?.deploymentStatus === 'DEPLOYING' ||
       site?.deploymentStatus === 'NOT_YET_DEPLOYED' ? (
         <Skeleton className='h-6 w-full' />

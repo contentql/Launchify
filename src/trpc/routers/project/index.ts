@@ -96,9 +96,9 @@ export const projectRouter = router({
       }
     }),
 
-  getLatestProject: userProcedure
+  getProjectById: userProcedure
     ?.input(getLatestSchema)
-    .mutation(async ({ ctx, input }) => {
+    .query(async ({ ctx, input }) => {
       try {
         const { id } = input
         const { user } = ctx

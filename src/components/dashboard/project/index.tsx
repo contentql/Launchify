@@ -1,5 +1,6 @@
 'use client'
 
+import { Service } from '@payload-types'
 import { DatabaseZap } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -17,29 +18,50 @@ import {
   TabsList,
   TabsTrigger,
 } from '@/components/common/Tabs'
+import { trpc } from '@/trpc/client'
 
 import Services from './Services'
+import Variables from './Variables'
 
 const ProjectDetailsView = ({ slug }: { slug: any }) => {
   const [open, setOpen] = useState(slug?.length > 1)
   const router = useRouter()
+
+  const {
+    data,
+    isLoading: isServicesLoading,
+    isFetching,
+  } = trpc.service.getServicesByProjectId.useQuery({
+    id: slug?.at(0),
+  })
+
+  const { data: service, isLoading: isServiceLoading } =
+    trpc?.service.getServiceById.useQuery({
+      id: slug?.at(-1),
+    })
   return (
     <Container className='relative'>
-      <Services setOpen={setOpen} />
+      <Services
+        open={open}
+        services={data?.services as Service[]}
+        setOpen={setOpen}
+        slug={slug}
+      />
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetContent
           onEscapeKeyDown={event => event.preventDefault()}
-          onCloseAutoFocus={() => router?.replace('/dashboard/project/i')}
-          onInteractOutside={() => router?.replace('/dashboard/project/i')}
-          className='hide-scroll-bar min-w-[70%] overflow-scroll'>
+          onCloseAutoFocus={() =>
+            router?.replace(`/dashboard/project/${slug?.at(0)}`)
+          }
+          onInteractOutside={() =>
+            router?.replace(`/dashboard/project/${slug?.at(0)}`)
+          }
+          className='hide-scroll-bar min-w-[100%] overflow-scroll md:min-w-[64%] lg:min-w-[66%] xl:min-w-[66%]'>
           <SheetHeader>
             <SheetTitle className='inline-flex items-center gap-x-2'>
               <DatabaseZap size={20} />
               <span> Mysql Database</span>
             </SheetTitle>
-            {/* <SheetDescription>
-              Make changes to your profile here. Click save when you`re done.
-            </SheetDescription> */}
           </SheetHeader>
           <Tabs defaultValue='details' className='pt-6'>
             <div className='relative'>
@@ -69,10 +91,11 @@ const ProjectDetailsView = ({ slug }: { slug: any }) => {
                 allowFullScreen></iframe>
             </TabsContent>
             <TabsContent className='h-[100%] w-full' value='variables'>
-              <iframe
-                className='mx-auto h-[100%] w-full rounded-md shadow-xl md:w-[800px]'
-                src={''}
-                allowFullScreen></iframe>
+              <Variables
+                variables={
+                  service?.variables as { key: string; value: string }[]
+                }
+              />
             </TabsContent>
             <TabsContent className='h-[100%] w-full' value='mobile'>
               <iframe
