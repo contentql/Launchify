@@ -63,7 +63,7 @@ const ProjectDetailsView = ({ slug }: { slug: any }) => {
               <span> Mysql Database</span>
             </SheetTitle>
           </SheetHeader>
-          <Tabs defaultValue='details' className='pt-6'>
+          <Tabs defaultValue='variables' className='pt-6'>
             <div className='relative'>
               <TabsList className=' bg-base-300'>
                 <TabsTrigger
