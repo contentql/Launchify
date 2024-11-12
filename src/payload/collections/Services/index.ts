@@ -1,5 +1,7 @@
 import { CollectionConfig } from 'payload'
 
+import { updateCollectionBeforeChange } from './hooks/updateCollectionBeforeChange'
+
 // import { assignUserId } from './field-level-hooks/assignUserId'
 
 export const Services: CollectionConfig = {
@@ -12,6 +14,9 @@ export const Services: CollectionConfig = {
     create: () => true,
     update: () => true,
     read: () => true,
+  },
+  hooks: {
+    beforeChange: [updateCollectionBeforeChange],
   },
 
   fields: [
@@ -144,6 +149,7 @@ export const Services: CollectionConfig = {
           ],
           defaultValue: 'NOT_YET_DEPLOYED',
           admin: {
+            readOnly: false,
             description:
               'Select the current deployment status of the project in Railway.',
           },
