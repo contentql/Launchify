@@ -1,7 +1,8 @@
 'use client'
 
 import { Service } from '@payload-types'
-import { DatabaseZap } from 'lucide-react'
+import { Box } from 'lucide-react'
+import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
@@ -20,6 +21,7 @@ import {
 } from '@/components/common/Tabs'
 import { trpc } from '@/trpc/client'
 
+import Details from './Details'
 import Services from './Services'
 import Variables from './Variables'
 
@@ -56,14 +58,23 @@ const ProjectDetailsView = ({ slug }: { slug: any }) => {
           onInteractOutside={() =>
             router?.replace(`/dashboard/project/${slug?.at(0)}`)
           }
-          className='hide-scroll-bar min-w-[100%] overflow-scroll md:min-w-[64%] lg:min-w-[66%] xl:min-w-[66%]'>
+          className='hide-scroll-bar min-w-[100%] overflow-scroll pb-24 md:min-w-[64%] lg:min-w-[66%] xl:min-w-[66%]'>
           <SheetHeader>
             <SheetTitle className='inline-flex items-center gap-x-2'>
-              <DatabaseZap size={20} />
-              <span> Mysql Database</span>
+              {service?.icon ? (
+                <Image
+                  src={service?.icon || ''}
+                  alt=''
+                  width={20}
+                  height={20}
+                />
+              ) : (
+                <Box className='text-base-content/80' size={20} />
+              )}
+              <span> {service?.serviceName}</span>
             </SheetTitle>
           </SheetHeader>
-          <Tabs defaultValue='variables' className='pt-6'>
+          <Tabs defaultValue='details' className='pt-6'>
             <div className='relative'>
               <TabsList className=' bg-base-300'>
                 <TabsTrigger
@@ -76,19 +87,11 @@ const ProjectDetailsView = ({ slug }: { slug: any }) => {
                   value='variables'>
                   Variables
                 </TabsTrigger>
-                <TabsTrigger
-                  className='data-[state=active]:rounded-md data-[state=active]:bg-base-200'
-                  value='settings'>
-                  Settings
-                </TabsTrigger>
               </TabsList>
               <div className='w-full border-b border-base-content/40 pt-2' />
             </div>
             <TabsContent className='h-[100%] w-full' value='details'>
-              <iframe
-                className='h-[100%] w-[100%] rounded-md shadow-xl'
-                src={''}
-                allowFullScreen></iframe>
+              <Details service={service as Service} />
             </TabsContent>
             <TabsContent className='h-[100%] w-full' value='variables'>
               <Variables
@@ -96,12 +99,6 @@ const ProjectDetailsView = ({ slug }: { slug: any }) => {
                   service?.variables as { key: string; value: string }[]
                 }
               />
-            </TabsContent>
-            <TabsContent className='h-[100%] w-full' value='mobile'>
-              <iframe
-                className='mx-auto h-[100%] w-full rounded-md shadow-xl md:w-[400px]'
-                src={''}
-                allowFullScreen></iframe>
             </TabsContent>
           </Tabs>
         </SheetContent>

@@ -48,8 +48,10 @@ function Services({
   return (
     <section
       className={cn(
-        'flex min-h-[calc(100vh-16rem)] flex-col items-center justify-center gap-4 transition-all duration-300 ease-linear md:flex-row md:flex-wrap',
-        open ? 'w-full md:w-[30%]' : 'w-full',
+        '  transition-all duration-300 ease-linear ',
+        open
+          ? 'w-full md:grid md:w-[30%] md:grid-cols-1 md:gap-y-4'
+          : 'flex min-h-[calc(100vh-16rem)] w-full  flex-col items-center justify-center gap-4 md:flex-row md:flex-wrap',
       )}>
       {services?.map((service, index) => (
         <Link
