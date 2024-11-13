@@ -1,5 +1,13 @@
 import { Service } from '@payload-types'
-import { Boxes, Globe, Group, Plus, Trash2 } from 'lucide-react'
+import {
+  Boxes,
+  Globe,
+  GlobeLock,
+  Group,
+  Plus,
+  Settings,
+  Trash2,
+} from 'lucide-react'
 import Link from 'next/link'
 
 import Button from '@/components/common/Button'
@@ -47,10 +55,10 @@ const Details = ({ service }: { service: Service }) => {
         </div>
       )}
 
-      <div className='relative ml-1 mt-4 border-l border-base-content/80 pr-4 md:ml-4'>
+      <div className='relative ml-4 mt-4 border-l border-base-content/80 pr-4'>
         <div className='inline-flex items-center'>
           <span className='absolute -start-4 flex h-8 w-8 items-center justify-center rounded-full bg-base-300'>
-            <Boxes className='text-base-content opacity-80' size={16} />
+            <Settings className='text-base-content opacity-80' size={16} />
           </span>
           <h3 className='text-md pl-8 font-semibold text-base-content opacity-100 '>
             Details
@@ -105,7 +113,7 @@ const Details = ({ service }: { service: Service }) => {
             </div>
             <div className='mt-8 inline-flex items-center'>
               <span className='absolute -start-4 flex h-8 w-8 items-center justify-center rounded-full bg-base-300'>
-                <Boxes className='text-base-content opacity-80' size={16} />
+                <GlobeLock className='text-base-content opacity-80' size={16} />
               </span>
               <h3 className='text-md pl-8 font-semibold text-base-content opacity-100 '>
                 Custom Domains
