@@ -40,3 +40,21 @@ export const getVariablesSchema = z.object({
   serviceId: z.string(),
 })
 export type getVariablesSchemaType = z.infer<typeof getServiceDomainsSchema>
+
+export const CreateCustomDomainSchema = z.object({
+  projectId: z.string(),
+  serviceId: z.string(),
+  environmentId: z.string(),
+  domain: z.string(),
+})
+export type CreateCustomDomainType = z.infer<typeof CreateCustomDomainSchema>
+export const RedeployServiceSchema = z.object({
+  serviceId: z.string(),
+  environmentId: z.string(),
+})
+export type RedeployServiceType = z.infer<typeof RedeployServiceSchema>
+
+export const DeleteCustomDomainSchema = z.object({
+  domainId: z.string(),
+})
+export type DeleteCustomDomainType = z.infer<typeof DeleteCustomDomainSchema>

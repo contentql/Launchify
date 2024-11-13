@@ -2,16 +2,23 @@ import { railwayAPI } from '@/utils/railwayAPI'
 import { TEAM_ID, TEMPLATE_ID } from '@/utils/railwayConstants'
 
 import { CREATE_SERVICE_DOMAIN } from './queries/createServiceDomain'
+import { CREATE_CUSTOM_DOMAIN } from './queries/domain/createCustomDomain'
+import { DELETE_CUSTOM_DOMAIN } from './queries/domain/deleteCustomDomain'
+import { GET_DOMAINS } from './queries/domain/getDomains'
 import { GET_PROJECT_DETAILS } from './queries/getProjectDetails'
 import { GET_SERVICE_DOMAINS } from './queries/getServiceDomains'
 import { CREATE_EMPTY_PROJECT } from './queries/project/createEmptyProject'
+import { REDEPLOY_SERVICE } from './queries/service/redeployService'
 import { TEMPLATE_DEPLOY } from './queries/templateDeploy'
 import { GET_VARIABLES } from './queries/variables/getVariables'
 import { CREATE_WEBHOOK } from './queries/webhook/createWebhook'
 import {
+  CreateCustomDomainType,
   CreateEmptyProjectType,
   CreateServiceDomainType,
   CreateWebhookType,
+  DeleteCustomDomainType,
+  RedeployServiceType,
   TemplateDeployType,
   getServiceDomainsSchemaType,
   getVariablesSchemaType,
@@ -283,6 +290,30 @@ export const getServiceDomains = async (input: getServiceDomainsSchemaType) => {
   }
 }
 
+export const createCustomDomain = async (input: CreateCustomDomainType) => {
+  const { projectId, serviceId, environmentId, domain } = input
+
+  const queryVariables = {
+    input: {
+      projectId,
+      serviceId,
+      environmentId,
+      domain,
+    },
+  }
+
+  try {
+    const response = await railwayAPI({
+      query: CREATE_CUSTOM_DOMAIN,
+      variables: queryVariables,
+    })
+
+    return response.data.customDomainCreate
+  } catch (error: any) {
+    throw new Error('Error during creating custom domain: ', error)
+  }
+}
+
 export const createWebhook = async (input: CreateWebhookType) => {
   const { projectId, url } = input
 
@@ -319,5 +350,69 @@ export const getVariables = async (input: getVariablesSchemaType) => {
     return response.data
   } catch (error: any) {
     throw new Error('Error during getting domains: ', error)
+  }
+}
+
+export const redeployService = async (input: RedeployServiceType) => {
+  const { serviceId, environmentId } = input
+
+  const queryVariables = {
+    serviceId,
+    environmentId,
+  }
+
+  try {
+    const response = await railwayAPI({
+      query: REDEPLOY_SERVICE,
+      variables: queryVariables,
+    })
+
+    return response.data.serviceInstanceRedeploy
+  } catch (error: any) {
+    throw new Error('Error during redeploy service: ', error)
+  }
+}
+
+export const getDomains = async (input: {
+  projectId: string
+  serviceId: string
+  environmentId: string
+}) => {
+  const { projectId, serviceId, environmentId } = input
+
+  try {
+    const queryVariables = {
+      projectId,
+      serviceId,
+      environmentId,
+    }
+
+    const domainsResponse = await railwayAPI({
+      query: GET_DOMAINS,
+      variables: queryVariables,
+    })
+
+    return domainsResponse?.data.domains
+  } catch (error: any) {
+    throw new Error('Error during getting valid domain: ', error)
+  }
+}
+
+export const deleteCustomDomain = async (input: DeleteCustomDomainType) => {
+  const { domainId } = input
+
+  const queryVariables = {
+    id: domainId,
+  }
+
+  try {
+    const response = await railwayAPI({
+      query: DELETE_CUSTOM_DOMAIN,
+      variables: queryVariables,
+    })
+
+    return response.data.customDomainDelete
+  } catch (error: any) {
+    throw new Error('Error during deleting custom domain: ', error)
   }
 }

@@ -165,6 +165,7 @@ export interface Service {
         id?: string | null;
       }[]
     | null;
+  customDomain?: string | null;
   deploymentStatus?: ('NOT_YET_DEPLOYED' | 'SUCCESS' | 'ERROR' | 'DEPLOYING') | null;
   deleted?: boolean | null;
   updatedAt: string;

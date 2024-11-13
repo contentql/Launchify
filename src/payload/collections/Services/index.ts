@@ -1,6 +1,7 @@
 import { CollectionConfig } from 'payload'
 
 import { updateCollectionBeforeChange } from './hooks/updateCollectionBeforeChange'
+import { updateCustomDomain } from './hooks/updateCustomDomain'
 
 // import { assignUserId } from './field-level-hooks/assignUserId'
 
@@ -16,7 +17,7 @@ export const Services: CollectionConfig = {
     read: () => true,
   },
   hooks: {
-    beforeChange: [updateCollectionBeforeChange],
+    beforeChange: [updateCollectionBeforeChange, updateCustomDomain],
   },
 
   fields: [
@@ -123,6 +124,15 @@ export const Services: CollectionConfig = {
           ],
           admin: {
             readOnly: true,
+          },
+        },
+        {
+          name: 'customDomain',
+          type: 'text',
+          label: 'Custom domain',
+
+          admin: {
+            readOnly: false,
           },
         },
         {
