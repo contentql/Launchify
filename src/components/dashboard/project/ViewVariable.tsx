@@ -13,7 +13,7 @@ export const ViewVariable = ({ variable }: { variable: string }) => {
         <p className='text-sm font-semibold text-base-content'>
           {variable ? (
             <Input
-              className='focus:ring:0 h-6 w-full hover:ring-0'
+              className='focus:ring:0 h-6 w-full px-1 hover:ring-0'
               readOnly
               value={variable}
             />
@@ -26,7 +26,7 @@ export const ViewVariable = ({ variable }: { variable: string }) => {
       ) : (
         <p className='inline-flex items-center'>******</p>
       )}
-      <div className='hidden cursor-pointer group-hover:block'>
+      <div className='cursor-pointer group-hover:block md:hidden'>
         {hidden ? (
           <motion.div
             key='check-icon'

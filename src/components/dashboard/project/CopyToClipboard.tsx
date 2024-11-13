@@ -19,7 +19,7 @@ const CopyToClipboard: FC<{ textData: string }> = ({ textData }) => {
     }, 1000)
   }
   return (
-    <div className='hidden cursor-pointer group-hover:block'>
+    <div className='cursor-pointer group-hover:block md:hidden'>
       {copied ? (
         <motion.div
           key='check-icon'
