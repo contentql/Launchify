@@ -49,4 +49,33 @@ export const serviceRouter = router({
         })
       }
     }),
+  updateCustomDomain: userProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        domain: z.string(),
+      }),
+    )
+    .mutation(async ({ input }) => {
+      const { domain, id } = input
+      try {
+        await payload.update({
+          collection: 'services',
+          where: {
+            id: {
+              equals: id,
+            },
+          },
+          data: {
+            customDomain: domain,
+          },
+        })
+      } catch (error: any) {
+        console.log('Error while updating custom domain', error)
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: error.message || 'Error while updating custom domain',
+        })
+      }
+    }),
 })

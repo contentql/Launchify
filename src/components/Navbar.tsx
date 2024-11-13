@@ -2,7 +2,6 @@
 
 import { User } from '@payload-types'
 import { motion, useMotionValueEvent, useScroll } from 'framer-motion'
-import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
@@ -12,6 +11,7 @@ import { pageLinks } from '@/data/pageLinks'
 import MobileMenu from './MobileMenu'
 import ProfileDropdown from './ProfileDropdown'
 import Button from './common/Button'
+import Logo from './common/Logo'
 
 const Navbar = ({ user }: { user: User }) => {
   const [hidden, setHidden] = useState(false)
@@ -39,13 +39,7 @@ const Navbar = ({ user }: { user: User }) => {
         <Link
           href={user ? '/dashboard' : '/'}
           className='inline-flex h-10 w-28 gap-x-2'>
-          <Image
-            src='/logo.png'
-            alt='logo'
-            className='object-contain'
-            width={1000}
-            height={1000}
-          />
+          <Logo />
         </Link>
         {user ? (
           <ul className='flex items-center justify-end'>

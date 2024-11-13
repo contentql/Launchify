@@ -13,7 +13,7 @@ export const ViewVariable = ({ variable }: { variable: string }) => {
         <p className='text-sm font-semibold text-base-content'>
           {variable ? (
             <Input
-              className='focus:ring:0 h-6 w-full px-1 hover:ring-0'
+              className='focus:ring:0 h-6 w-full border-none px-1 hover:ring-0'
               readOnly
               value={variable}
             />

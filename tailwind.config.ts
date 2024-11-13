@@ -32,11 +32,10 @@ const config: Config = {
           DEFAULT: '#374151', // Dark slate grey, perfect for neutral elements
           content: '#F3F4F6', // Light grey for readability on neutral backgrounds
         },
-        'base-100': '#1C1E26', // Deep, sleek blackish-blue, providing a high-end and refined background
-        'base-200': '#2A2D3A', // Rich, dark blue-grey for subtle layering and depth
-        'base-300': '#3A3D4D',
-        // Warm dark grey with a hint of purple for cohesiveness
-        'base-content': '#ffffff', // Light grey for text on dark backgrounds, ensuring readability
+        'base-100': '#10141E', // Ultra-dark blue with subtle warmth for a sleek and modern feel
+        'base-200': '#1C1F2B', // Dark navy-blue that adds depth while feeling upscale
+        'base-300': '#2A2D3E', // Rich, deep grey with blue undertones for contemporary layering
+        'base-content': '#ffffff', // Crisp white for text on dark backgrounds, ensuring readability
         warning: '#FBBF24', // Muted golden amber, suitable for warning elements without harshness
         info: '#60A5FA', // Soft sky blue for informational highlights
         success: '#10B981', // Calming green for success messages, aligned with the secondary color

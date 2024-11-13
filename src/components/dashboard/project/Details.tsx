@@ -1,19 +1,12 @@
 import { Service } from '@payload-types'
-import {
-  Boxes,
-  Globe,
-  GlobeLock,
-  Group,
-  Plus,
-  Settings,
-  Trash2,
-} from 'lucide-react'
+import { Boxes, Globe, GlobeLock, Group, Settings } from 'lucide-react'
 import Link from 'next/link'
 
 import Button from '@/components/common/Button'
 import { formatDate } from '@/utils/dateFormatter'
 
 import CopyToClipboard from './CopyToClipboard'
+import CustomDomain from './CustomDomain'
 
 const Details = ({ service }: { service: Service }) => {
   const Component = {
@@ -98,18 +91,24 @@ const Details = ({ service }: { service: Service }) => {
                 Service Domain
               </h3>
             </div>
-            <div className='group ml-8 mt-2 flex w-full items-center justify-between rounded-md border border-base-content/20 px-4 py-2 shadow-lg hover:bg-base-300 md:w-2/3'>
-              <Link
-                className='text-sm font-semibold text-base-content '
-                href={
-                  `https://${service?.serviceDomains?.at(0)?.domainUrl}` || ''
-                }
-                target='_blank'>
-                {service?.serviceDomains?.at(0)?.domainUrl}
-              </Link>
-              <CopyToClipboard
-                textData={service?.serviceDomains?.at(0)?.domainUrl!}
-              />
+            <div className='ml-8 mt-2  w-full space-y-2 md:w-2/3'>
+              <p className='text-sm text-base-content/80'>
+                Access your project with ease using a shared domain provided by
+                our platform.
+              </p>
+              <div className='group flex w-full items-center justify-between rounded-md border border-base-content/20 px-4 py-2 shadow-lg hover:bg-base-300 '>
+                <Link
+                  className='text-sm font-semibold text-base-content '
+                  href={
+                    `https://${service?.serviceDomains?.at(0)?.domainUrl}` || ''
+                  }
+                  target='_blank'>
+                  {service?.serviceDomains?.at(0)?.domainUrl}
+                </Link>
+                <CopyToClipboard
+                  textData={service?.serviceDomains?.at(0)?.domainUrl!}
+                />
+              </div>
             </div>
             <div className='mt-8 inline-flex items-center'>
               <span className='absolute -start-4 flex h-8 w-8 items-center justify-center rounded-full bg-base-300'>
@@ -120,31 +119,10 @@ const Details = ({ service }: { service: Service }) => {
               </h3>
             </div>
             <div className='ml-8 w-full md:w-2/3'>
-              <div className='group mt-2 flex w-full items-center justify-between rounded-md border border-base-content/20 px-4 py-2 shadow-lg hover:bg-base-300 '>
-                <Link
-                  className='text-sm font-semibold text-base-content '
-                  href={
-                    `https://${service?.serviceDomains?.at(0)?.domainUrl}` || ''
-                  }
-                  target='_blank'>
-                  https://ghost.contentql.io
-                </Link>
-                <div className='inline-flex items-center gap-x-2'>
-                  <CopyToClipboard
-                    textData={service?.serviceDomains?.at(0)?.domainUrl!}
-                  />
-                  <Trash2
-                    size={14}
-                    className='hidden cursor-pointer group-hover:block'
-                  />
-                </div>
-              </div>
-              <div className='mt-2 flex items-end justify-end'>
-                <Button size={'sm'} variant={'outline'}>
-                  <Plus size={16} />
-                  Custom Domain
-                </Button>
-              </div>
+              <p className='mt-2 text-sm text-base-content/80'>
+                Create a unique web presence with your own custom domain.
+              </p>
+              <CustomDomain service={service} />
             </div>
           </>
         )}
