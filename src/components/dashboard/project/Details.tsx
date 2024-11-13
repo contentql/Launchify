@@ -120,7 +120,9 @@ const Details = ({ service }: { service: Service }) => {
             </div>
             <div className='ml-8 w-full md:w-2/3'>
               <p className='mt-2 text-sm text-base-content/80'>
-                Create a unique web presence with your own custom domain.
+                {service?.customDomain
+                  ? 'Make your brand stand out with a personalized domain that adds professionalism and recognition'
+                  : 'Create a unique web presence with your own custom domain.'}
               </p>
               <CustomDomain service={service} />
             </div>
