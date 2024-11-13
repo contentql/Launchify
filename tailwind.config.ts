@@ -35,7 +35,7 @@ const config: Config = {
         'base-100': '#18181B', // Charcoal black for background, offering depth without starkness
         'base-200': '#25262A', // Dark graphite for secondary background elements
         'base-300': '#3B3C40', // Medium grey for tertiary backgrounds, subtly softening the palette
-        'base-content': '#D1D5DB', // Light grey for text on dark backgrounds, ensuring readability
+        'base-content': '#ffffff', // Light grey for text on dark backgrounds, ensuring readability
         warning: '#FBBF24', // Muted golden amber, suitable for warning elements without harshness
         info: '#60A5FA', // Soft sky blue for informational highlights
         success: '#10B981', // Calming green for success messages, aligned with the secondary color

@@ -1,14 +1,29 @@
 'use client'
 
 // import * as Icons from 'lucide-react'
+import { Skeleton } from '../common/Skeleton'
 import { Project } from '@payload-types'
 import Link from 'next/link'
 
 // const iconList = Object.keys(Icons)
-const List = ({ projects }: { projects: Project[] }) => {
+const List = ({
+  projects,
+  isLoading,
+}: {
+  projects: Project[]
+  isLoading: boolean
+}) => {
   return (
     <div className='z-10 grid grid-cols-1 items-center gap-4 md:grid-cols-2 lg:grid-cols-3'>
-      {projects?.map((site, index) => <ListItem key={index} site={site} />)}
+      {isLoading ? (
+        <>
+          <Skeleton className='h-48 w-full' />
+          <Skeleton className='h-48 w-full' />
+          <Skeleton className='h-48 w-full' />
+        </>
+      ) : (
+        projects?.map((site, index) => <ListItem key={index} site={site} />)
+      )}
     </div>
   )
 }

@@ -1,6 +1,8 @@
 import { SidebarView } from '../common/Sidebar'
 import { User } from '@payload-types'
 
+import Container from '@/components/common/Container'
+
 import ProfileForm from './ProfileForm'
 
 interface Props {
@@ -9,12 +11,14 @@ interface Props {
 
 const ProfileView: React.FC<Props> = ({ user }) => {
   return (
-    <div className='flex w-full flex-col gap-5 bg-base-100 px-2 md:flex-row md:px-16 lg:px-28'>
-      <SidebarView user={user} />
-      <main className='min-h-screen w-full pt-4 md:pt-24 '>
-        <ProfileForm user={user} />
-      </main>
-    </div>
+    <Container>
+      <div className='flex w-full flex-col gap-5 bg-base-100 md:flex-row'>
+        <SidebarView user={user} />
+        <main className='min-h-screen w-full pt-4 md:pt-24 '>
+          <ProfileForm user={user} />
+        </main>
+      </div>
+    </Container>
   )
 }
 

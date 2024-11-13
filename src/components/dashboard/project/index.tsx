@@ -48,6 +48,7 @@ const ProjectDetailsView = ({ slug }: { slug: any }) => {
         services={data?.services as Service[]}
         setOpen={setOpen}
         slug={slug}
+        isServicesLoading={isServicesLoading}
       />
       <Sheet open={open} onOpenChange={setOpen}>
         <SheetContent

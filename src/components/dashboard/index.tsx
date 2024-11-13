@@ -65,6 +65,7 @@ const DashboardView = () => {
     fetchNextPage,
     hasNextPage,
     isFetching,
+    isLoading,
     isFetchingNextPage,
     isPending,
     status,
@@ -95,15 +96,7 @@ const DashboardView = () => {
       console.log('Project Created data', data)
       toast?.success(`Project created successfully`)
       setOpen(false)
-      let count = 0
-      const intervalId = setInterval(() => {
-        if (count < 5) {
-          refetch()
-          count++
-        } else {
-          clearInterval(intervalId) // Stop the interval after 5 iterations
-        }
-      }, 10000) // 10 seconds
+      refetch()
     },
     onError: error => {
       if (error.data?.code === 'CONFLICT') {
@@ -125,7 +118,7 @@ const DashboardView = () => {
           <h2 className='text-left text-2xl font-bold'>Your blog sites</h2>
           <Button onClick={() => setOpen(true)}>Create new site</Button>
         </div>
-        <List projects={allProjects as Project[]} />
+        <List projects={allProjects as Project[]} isLoading={isLoading} />
         <div className='mt-4 w-full' ref={ref}>
           {isFetchingNextPage && (
             <div className=' inset-0 flex w-full items-center justify-center'>
