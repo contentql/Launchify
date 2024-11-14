@@ -99,6 +99,7 @@ const ProjectDetailsView = ({ slug }: { slug: any }) => {
                 variables={
                   service?.variables as { key: string; value: string }[]
                 }
+                id={service?.id as string}
               />
             </TabsContent>
           </Tabs>

@@ -10,7 +10,9 @@ import { GET_SERVICE_DOMAINS } from './queries/getServiceDomains'
 import { CREATE_EMPTY_PROJECT } from './queries/project/createEmptyProject'
 import { REDEPLOY_SERVICE } from './queries/service/redeployService'
 import { TEMPLATE_DEPLOY } from './queries/templateDeploy'
+import { DELETE_VARIABLE } from './queries/variables/deleteVariable'
 import { GET_VARIABLES } from './queries/variables/getVariables'
+import { UPSERT_VARIABLES } from './queries/variables/upsertVariables'
 import { CREATE_WEBHOOK } from './queries/webhook/createWebhook'
 import {
   CreateCustomDomainType,
@@ -18,8 +20,10 @@ import {
   CreateServiceDomainType,
   CreateWebhookType,
   DeleteCustomDomainType,
+  DeleteVariableType,
   RedeployServiceType,
   TemplateDeployType,
+  UpsertVariablesType,
   getServiceDomainsSchemaType,
   getVariablesSchemaType,
 } from './validator'
@@ -350,6 +354,44 @@ export const getVariables = async (input: getVariablesSchemaType) => {
     return response.data
   } catch (error: any) {
     throw new Error('Error during getting domains: ', error)
+  }
+}
+
+export const upsertVariables = async (input: UpsertVariablesType) => {
+  const { projectId, serviceId, environmentId, variables } = input
+
+  const queryVariables = {
+    input: { projectId, serviceId, environmentId, variables },
+  }
+
+  try {
+    const response = await railwayAPI({
+      query: UPSERT_VARIABLES,
+      variables: queryVariables,
+    })
+
+    return response.data.variableCollectionUpsert
+  } catch (error: any) {
+    throw new Error('Error during upsert variables: ', error)
+  }
+}
+
+export const deleteVariable = async (input: DeleteVariableType) => {
+  const { projectId, serviceId, environmentId, name } = input
+
+  const queryVariables = {
+    input: { projectId, serviceId, environmentId, name },
+  }
+
+  try {
+    const response = await railwayAPI({
+      query: DELETE_VARIABLE,
+      variables: queryVariables,
+    })
+
+    return response.data.variableCollectionUpsert
+  } catch (error: any) {
+    throw new Error('Error during deleting variables: ', error)
   }
 }
 

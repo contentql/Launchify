@@ -39,7 +39,22 @@ export const getVariablesSchema = z.object({
   projectId: z.string(),
   serviceId: z.string(),
 })
-export type getVariablesSchemaType = z.infer<typeof getServiceDomainsSchema>
+export type getVariablesSchemaType = z.infer<typeof getVariablesSchema>
+export const UpsertVariablesSchema = z.object({
+  projectId: z.string(),
+  serviceId: z.string(),
+  environmentId: z.string(),
+  variables: z.record(z.string()),
+})
+export type UpsertVariablesType = z.infer<typeof UpsertVariablesSchema>
+
+export const DeleteVariable = z.object({
+  projectId: z.string(),
+  serviceId: z.string(),
+  environmentId: z.string(),
+  name: z.string(),
+})
+export type DeleteVariableType = z.infer<typeof DeleteVariable>
 
 export const CreateCustomDomainSchema = z.object({
   projectId: z.string(),

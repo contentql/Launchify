@@ -78,4 +78,38 @@ export const serviceRouter = router({
         })
       }
     }),
+  updateVariables: userProcedure
+    .input(
+      z.object({
+        id: z.string(),
+        variables: z.array(
+          z.object({
+            key: z.string(),
+            value: z.string(),
+          }),
+        ),
+      }),
+    )
+    .mutation(async ({ input, ctx }) => {
+      const { id, variables } = input
+      try {
+        await payload.update({
+          collection: 'services',
+          where: {
+            id: {
+              equals: id,
+            },
+          },
+          data: {
+            variables,
+          },
+        })
+      } catch (error) {
+        console.log('Error while updating variables', error)
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: 'Error while updating variables',
+        })
+      }
+    }),
 })
