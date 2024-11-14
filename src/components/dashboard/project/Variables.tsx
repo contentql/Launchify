@@ -1,17 +1,18 @@
 import { zodResolver } from '@hookform/resolvers/zod'
 import { motion } from 'framer-motion'
-import { Check, EllipsisVertical, Plus, SquarePen, Trash2 } from 'lucide-react'
+import {
+  Check,
+  EllipsisVertical,
+  Plus,
+  SquarePen,
+  Trash2,
+  X,
+} from 'lucide-react'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 
 import Button from '@/components/common/Button'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/common/Dialog'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -45,7 +46,7 @@ const Variables = ({
 
   //toggle add variable form
   const [add, setAdd] = useState(false)
-  const [edit, setEdit] = useState(false)
+  const [key, setKey] = useState('')
 
   // react-hook-form methods
   const {
@@ -60,14 +61,14 @@ const Variables = ({
 
   const trpcUtils = trpc.useUtils()
 
-  const added = variables.filter(
+  const added = variables?.filter(
     variable =>
       !serviceVariables?.some(
         serviceVariable => serviceVariable.key === variable.key,
       ),
   )
 
-  const edited = variables.filter(variable =>
+  const edited = variables?.filter(variable =>
     serviceVariables?.some(
       serviceVariable =>
         serviceVariable.key === variable.key &&
@@ -106,6 +107,7 @@ const Variables = ({
           : variable,
       ),
     )
+    setKey('')
   }
 
   // Delete a single variable
@@ -134,24 +136,24 @@ const Variables = ({
   }
 
   const length = added?.length + edited.length + deleted.length
-
-  console.log('updated variables', variables)
   return (
     <motion.div className='pt-8 text-base-content'>
       {(added?.length > 0 || edited.length > 0 || deleted.length > 0) && (
-        <div className='fixed left-2 top-24 flex w-full items-center justify-between rounded-md  bg-base-300 px-3 py-2 shadow-lg drop-shadow-lg md:w-[20rem]'>
-          <p className='text-sm font-semibold'>
-            Apply {length} {length === 1 ? 'change' : 'changes'}
-          </p>
-          <div className='inline-flex gap-x-2'>
-            <Button
-              size={'sm'}
-              disabled={isPending}
-              onClick={() => handleApplyChanges()}>
-              Deploy Changes
-            </Button>
+        <>
+          <div className='fixed left-2 top-20 z-50 flex w-full items-center justify-between  rounded-md bg-primary/20 px-3 py-2 opacity-100 shadow-lg  backdrop-blur-md md:w-[20rem]'>
+            <p className='text-sm font-semibold'>
+              Apply {length} {length === 1 ? 'change' : 'changes'}
+            </p>
+            <div className='inline-flex gap-x-2'>
+              <Button
+                size={'sm'}
+                disabled={isPending}
+                onClick={() => handleApplyChanges()}>
+                Deploy Changes
+              </Button>
+            </div>
           </div>
-        </div>
+        </>
       )}
       <div className='pb-4'>
         {add ? (
@@ -227,8 +229,15 @@ const Variables = ({
             </p>
             <div className='relative col-span-2 inline-flex items-center justify-between gap-x-2'>
               <div className='inline-flex items-center gap-x-2'>
-                <ViewVariable variable={variable.value} />
-                <CopyToClipboard textData={variable.value} />
+                <EditVariable
+                  editVariable={editVariable}
+                  variable={variable}
+                  variableKey={key}
+                  setKey={setKey}
+                />
+                {key !== variable?.key && (
+                  <CopyToClipboard textData={variable.value} />
+                )}
               </div>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -240,13 +249,7 @@ const Variables = ({
                 <DropdownMenuContent align='end'>
                   <DropdownMenuItem
                     onClick={() => {
-                      const newValue = prompt(
-                        'Enter new value:',
-                        variable.value,
-                      )
-                      if (newValue !== null && newValue !== variable.value) {
-                        editVariable(variable.key, newValue)
-                      }
+                      setKey(variable?.key)
                     }}>
                     <SquarePen size={14} />
                     Edit
@@ -259,25 +262,6 @@ const Variables = ({
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-
-              {/* Edit Variable */}
-              {/* <button
-                onClick={() => {
-                  const newValue = prompt('Enter new value:', variable.value)
-                  if (newValue !== null && newValue !== variable.value) {
-                    editVariable(variable.key, newValue)
-                  }
-                }}
-                className='btn btn-sm btn-outline'>
-                Edit
-              </button> */}
-
-              {/* Delete Variable */}
-              {/* <button
-                onClick={() => deleteVariable(variable.key)}
-                className='btn btn-sm btn-outline btn-danger'>
-                Delete
-              </button> */}
             </div>
           </div>
         ))}
@@ -288,19 +272,50 @@ const Variables = ({
 
 export default Variables
 
-const EditVariable = ({ variable }: { variable: Variable }) => {
-  const [open, setOpen] = useState(false)
+const EditVariable = ({
+  editVariable,
+  variable,
+  setKey,
+  variableKey,
+}: {
+  variable: Variable
+  variableKey: string
+  setKey: Function
+  editVariable: Function
+}) => {
+  const [newValue, setNewValue] = useState('')
   return (
     <>
-      <div onClick={() => setOpen(true)}></div>
-      <Dialog open={open}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Update variable </DialogTitle>
-          </DialogHeader>
-          <Input value={variable?.value} />
-        </DialogContent>
-      </Dialog>
+      {variableKey === variable?.key ? (
+        <form className='inline-flex w-full items-center justify-between gap-x-2'>
+          <Input
+            className='h-8 w-full'
+            required
+            value={newValue}
+            onChange={e => setNewValue(e.target.value)}
+            type='text'
+          />
+          <div className='inline-flex items-center gap-x-2'>
+            <Check
+              type='submit'
+              size={16}
+              className='cursor-pointer'
+              onClick={() => editVariable(variable.key, newValue)}
+            />
+
+            <X
+              size={16}
+              className='cursor-pointer'
+              onClick={() => {
+                setKey('')
+                setNewValue('')
+              }}
+            />
+          </div>
+        </form>
+      ) : (
+        <ViewVariable variable={variable.value} />
+      )}
     </>
   )
 }
