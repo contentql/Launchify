@@ -156,6 +156,13 @@ export interface Service {
         id?: string | null;
       }[]
     | null;
+  railwayVariables?:
+    | {
+        key?: string | null;
+        value?: string | null;
+        id?: string | null;
+      }[]
+    | null;
   projectId?: string | null;
   serviceId?: string | null;
   environmentId?: string | null;

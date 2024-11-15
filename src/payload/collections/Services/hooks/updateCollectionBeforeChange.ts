@@ -29,7 +29,6 @@ export const updateCollectionBeforeChange: CollectionBeforeChangeHook = async ({
           })
 
           console.log('domains', variables, serviceDomains)
-
           if (!Array.isArray(originalDoc.serviceDomains)) {
             originalDoc.serviceDomains = []
           }
@@ -38,6 +37,14 @@ export const updateCollectionBeforeChange: CollectionBeforeChangeHook = async ({
               key,
               value: value as string | null | undefined,
             }),
+          )
+
+          const serviceVariables = formattedVariables?.filter(
+            variable => variable && !variable?.key?.startsWith('RAILWAY'),
+          )
+
+          const railwayVariables = formattedVariables?.filter(
+            variable => variable && variable?.key?.startsWith('RAILWAY'),
           )
 
           if (
@@ -50,8 +57,10 @@ export const updateCollectionBeforeChange: CollectionBeforeChangeHook = async ({
             formattedVariables?.length > 0 &&
             originalDoc?.variables?.length === 0
           ) {
-            data.variables = formattedVariables
+            data.variables = serviceDomains
+            data.railwayVariables = railwayVariables
           }
+
           return data
         } catch (error) {
           console.log('Error while getting domains', error)

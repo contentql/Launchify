@@ -63,7 +63,25 @@ export const Services: CollectionConfig = {
     // },
     {
       name: 'variables',
-      label: 'Variables',
+      label: 'Service Variables',
+      type: 'array',
+
+      fields: [
+        {
+          name: 'key',
+          label: 'Key',
+          type: 'text',
+        },
+        {
+          name: 'value',
+          label: 'Value',
+          type: 'text',
+        },
+      ],
+    },
+    {
+      name: 'railwayVariables',
+      label: 'Railway Variables',
       type: 'array',
 
       fields: [
