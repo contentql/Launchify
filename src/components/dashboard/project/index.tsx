@@ -38,9 +38,12 @@ const ProjectDetailsView = ({ slug }: { slug: any }) => {
   })
 
   const { data: service, isLoading: isServiceLoading } =
-    trpc?.service.getServiceById.useQuery({
-      id: slug?.at(-1),
-    })
+    trpc?.service.getServiceById.useQuery(
+      {
+        id: slug?.at(-1),
+      },
+      { enabled: open },
+    )
   return (
     <Container className='relative'>
       <Services
