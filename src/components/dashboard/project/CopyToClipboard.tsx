@@ -2,7 +2,14 @@ import { motion } from 'framer-motion'
 import { Check, Copy } from 'lucide-react'
 import { FC, useState } from 'react'
 
-const CopyToClipboard: FC<{ textData: string }> = ({ textData }) => {
+import { cn } from '@/utils/cn'
+
+const CopyToClipboard: FC<{
+  textData: string
+  children?: React.ReactNode
+  className?: string
+  hoverHidden?: boolean
+}> = ({ textData, children, className, hoverHidden }) => {
   const [copied, setCopied] = useState(false)
   const copyToClipboard = () => {
     setCopied(true)
@@ -19,7 +26,12 @@ const CopyToClipboard: FC<{ textData: string }> = ({ textData }) => {
     }, 1000)
   }
   return (
-    <div className='cursor-pointer group-hover:block md:hidden'>
+    <div
+      className={cn(
+        'cursor-pointer group-hover:block ',
+        hoverHidden ? 'block' : 'md:hidden',
+        className,
+      )}>
       {copied ? (
         <motion.div
           key='check-icon'
