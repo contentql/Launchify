@@ -44,7 +44,7 @@ const SignInForm: React.FC = () => {
       if (isAdmin) {
         router.push('/admin')
       } else {
-        router.push('/profile')
+        router.push('/dashboard')
       }
     },
     onError: () => {
