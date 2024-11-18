@@ -57,7 +57,7 @@ export const updateCollectionBeforeChange: CollectionBeforeChangeHook = async ({
             formattedVariables?.length > 0 &&
             originalDoc?.variables?.length === 0
           ) {
-            data.variables = serviceDomains
+            data.variables = serviceVariables
             data.railwayVariables = railwayVariables
           }
 
