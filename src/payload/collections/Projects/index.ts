@@ -4,6 +4,7 @@ import { CollectionConfig } from 'payload'
 import { isAdminOrCurrentUser } from './access'
 import { createGhostTemplate } from './hooks/createGhostTemplate'
 import { createService } from './hooks/createService'
+import { deleteRailwayProject } from './hooks/deleteRailwayProject'
 
 // import { assignUserId } from './field-level-hooks/assignUserId'
 
@@ -20,7 +21,7 @@ export const Projects: CollectionConfig = {
   },
 
   hooks: {
-    beforeChange: [createGhostTemplate],
+    beforeChange: [createGhostTemplate, deleteRailwayProject],
     afterChange: [createService],
   },
 
@@ -90,7 +91,18 @@ export const Projects: CollectionConfig = {
             placeholder: 'Auto-generated after project creation',
           },
         },
+        {
+          name: 'deleted',
+          type: 'checkbox',
+          label: 'Deleted',
+          defaultValue: false,
+          admin: {
+            readOnly: false,
+            description: 'Boolean to identify project deletion in railway.',
+          },
+        },
       ],
+
       admin: {
         position: 'sidebar',
         readOnly: true,

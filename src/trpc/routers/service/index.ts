@@ -3,6 +3,7 @@ import { getPayloadHMR } from '@payloadcms/next/utilities'
 import { TRPCError } from '@trpc/server'
 import { z } from 'zod'
 
+import { EditServiceScheme } from '@/components/dashboard/project/validator'
 import { router, userProcedure } from '@/trpc'
 
 const payload = await getPayloadHMR({ config: configPromise })
@@ -109,6 +110,30 @@ export const serviceRouter = router({
         throw new TRPCError({
           code: 'INTERNAL_SERVER_ERROR',
           message: 'Error while updating variables',
+        })
+      }
+    }),
+  updateServiceName: userProcedure
+    .input(EditServiceScheme)
+    ?.mutation(async ({ input }) => {
+      const { serviceName, id } = input
+      try {
+        await payload.update({
+          collection: 'services',
+          data: {
+            serviceName,
+          },
+          where: {
+            id: {
+              equals: id,
+            },
+          },
+        })
+      } catch (error: any) {
+        console.log('Error while updating service name', error.message)
+        throw new TRPCError({
+          code: 'INTERNAL_SERVER_ERROR',
+          message: error?.message || 'Error while updating service name',
         })
       }
     }),

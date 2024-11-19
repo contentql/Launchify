@@ -137,6 +137,7 @@ export interface Project {
   } | null;
   projectId?: string | null;
   environmentId?: string | null;
+  deleted?: boolean | null;
   updatedAt: string;
   createdAt: string;
 }

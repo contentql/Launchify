@@ -12,3 +12,9 @@ export const getProjectsSchema = z.object({
 export const getLatestSchema = z.object({
   id: z.string(),
 })
+
+export const updateProjectSchema = z.object({
+  id: z.string(),
+  name: z.string().optional(),
+  deleted: z.boolean().optional(),
+})
