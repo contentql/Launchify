@@ -118,6 +118,7 @@ const ListItem = ({ site }: { site: Project }) => {
       onSuccess: () => {
         toast.success(`Project deleted successfully`)
         setDeleteProject(false)
+        trpcUtils.project.getProjects.invalidate()
       },
       onError: () => {
         toast.error(`Failed to delete project`)
