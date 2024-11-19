@@ -159,6 +159,7 @@ const ProjectDetailsView = ({ slug }: { slug: any }) => {
             </TabsContent>
             <TabsContent className='h-[100%] w-full' value='variables'>
               <Variables
+                deploymentStatus={service?.deploymentStatus as string}
                 variables={
                   service?.variables as { key: string; value: string }[]
                 }

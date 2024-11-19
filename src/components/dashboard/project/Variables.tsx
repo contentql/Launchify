@@ -31,6 +31,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/common/Dropdown'
 import Input from '@/components/common/Input'
+import { Skeleton } from '@/components/common/Skeleton'
 import { trpc } from '@/trpc/client'
 import { cn } from '@/utils/cn'
 
@@ -41,11 +42,13 @@ import { addNewVariableScheme, addVariableDataType } from './validator'
 type Variable = { key: string; value: string; updated?: boolean }
 
 const Variables = ({
+  deploymentStatus,
   variables: initialVariables,
   id,
 }: {
   variables: Variable[]
   id: string
+  deploymentStatus: string
 }) => {
   // filter railway variables
   const serviceVariables = initialVariables?.filter(
@@ -381,54 +384,60 @@ const Variables = ({
 
       {/* Variables List */}
       <div className='space-y-1'>
-        {variables.map((variable, index) => (
-          <div
-            className={cn(
-              'group grid grid-cols-3 items-center gap-x-2 rounded-md border border-transparent px-2 py-1 hover:border hover:border-primary/25 hover:bg-primary/5',
-              variable?.updated ? 'bg-primary/15 hover:bg-primary/15' : '',
-            )}
-            key={index}>
-            <p className='col-span-1 line-clamp-1 text-sm font-semibold text-base-content'>
-              {variable.key}
-            </p>
-            <div className='relative col-span-2 inline-flex items-center justify-between gap-x-2'>
-              <div className='inline-flex items-center gap-x-2'>
-                <EditVariable
-                  editVariable={editVariable}
-                  variable={variable}
-                  variableKey={key}
-                  setKey={setKey}
-                />
-                {key !== variable?.key && (
-                  <CopyToClipboard textData={variable.value} />
-                )}
-              </div>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <EllipsisVertical
-                    className='cursor-pointer text-base-content/80'
-                    size={16}
+        {variables?.length <= 0 &&
+        (deploymentStatus === 'NOT_YET_DEPLOYED' ||
+          deploymentStatus === 'DEPLOYING') ? (
+          <LoadingSkeleton />
+        ) : (
+          variables.map((variable, index) => (
+            <div
+              className={cn(
+                'group grid grid-cols-3 items-center gap-x-2 rounded-md border border-transparent px-2 py-1 hover:border hover:border-primary/25 hover:bg-primary/5',
+                variable?.updated ? 'bg-primary/15 hover:bg-primary/15' : '',
+              )}
+              key={index}>
+              <p className='col-span-1 line-clamp-1 text-sm font-semibold text-base-content'>
+                {variable.key}
+              </p>
+              <div className='relative col-span-2 inline-flex items-center justify-between gap-x-2'>
+                <div className='inline-flex items-center gap-x-2'>
+                  <EditVariable
+                    editVariable={editVariable}
+                    variable={variable}
+                    variableKey={key}
+                    setKey={setKey}
                   />
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align='end'>
-                  <DropdownMenuItem
-                    onClick={() => {
-                      setKey(variable?.key)
-                    }}>
-                    <SquarePen size={14} />
-                    Edit
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => deleteVariable(variable.key)}
-                    className='text-error'>
-                    <Trash2 size={14} />
-                    Delete
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+                  {key !== variable?.key && (
+                    <CopyToClipboard textData={variable.value} />
+                  )}
+                </div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <EllipsisVertical
+                      className='cursor-pointer text-base-content/80'
+                      size={16}
+                    />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align='end'>
+                    <DropdownMenuItem
+                      onClick={() => {
+                        setKey(variable?.key)
+                      }}>
+                      <SquarePen size={14} />
+                      Edit
+                    </DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => deleteVariable(variable.key)}
+                      className='text-error'>
+                      <Trash2 size={14} />
+                      Delete
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
     </div>
   )
@@ -525,5 +534,20 @@ const DeleteVariable = ({
         </DialogContent>
       </Dialog>
     </>
+  )
+}
+
+const LoadingSkeleton = () => {
+  return (
+    <div className='w-fill space-y-1 p-4'>
+      <Skeleton className='h-6 w-full' />
+      <Skeleton className='h-6 w-full' />
+      <Skeleton className='h-6 w-full' />
+      <Skeleton className='h-6 w-full' />
+      <Skeleton className='h-6 w-full' />
+      <Skeleton className='h-6 w-full' />
+      <Skeleton className='h-6 w-full' />
+      <Skeleton className='h-6 w-full' />
+    </div>
   )
 }

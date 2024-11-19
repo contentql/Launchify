@@ -1,8 +1,7 @@
 import { Service } from '@payload-types'
-import { Boxes, Globe, GlobeLock, Group, Settings } from 'lucide-react'
+import { Boxes, Globe, GlobeLock, Settings } from 'lucide-react'
 import Link from 'next/link'
 
-import Button from '@/components/common/Button'
 import { formatDate } from '@/utils/dateFormatter'
 
 import CopyToClipboard from './CopyToClipboard'
@@ -128,7 +127,7 @@ const Details = ({ service }: { service: Service }) => {
             </div>
           </>
         )}
-        <div className='mt-8 inline-flex items-center'>
+        {/* <div className='mt-8 inline-flex items-center'>
           <span className='absolute -start-4 flex h-8 w-8 items-center justify-center rounded-full bg-base-300'>
             <Group className='text-error opacity-80' size={16} />
           </span>
@@ -145,7 +144,7 @@ const Details = ({ service }: { service: Service }) => {
           <Button size={'sm'} className='mt-2' variant={'destructive'}>
             Delete Service
           </Button>
-        </div>
+        </div> */}
       </div>
     </section>
   )
