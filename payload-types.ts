@@ -127,7 +127,7 @@ export interface Project {
   id: string;
   name?: string | null;
   projectDescription?: string | null;
-  template?: ('GHOST' | 'STRAPI') | null;
+  template?: ('GHOST' | 'STRAPI' | 'WORDPRESS') | null;
   Services?: {
     docs?: (string | Service)[] | null;
     hasNextPage?: boolean | null;

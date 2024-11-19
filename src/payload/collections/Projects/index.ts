@@ -60,6 +60,10 @@ export const Projects: CollectionConfig = {
           label: 'Strapi',
           value: 'STRAPI',
         },
+        {
+          label: 'WordPress',
+          value: 'WORDPRESS',
+        },
       ],
     },
     {

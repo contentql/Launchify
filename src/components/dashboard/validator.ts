@@ -5,7 +5,7 @@ export const ProjectSchema = z.object({
     .string()
     .min(3, { message: 'Project name must be at least 3 characters long' })
     .max(30, { message: 'Project name cannot exceed 30 characters' }),
-  template: z.enum(['GHOST', 'STRAPI']),
+  template: z.enum(['GHOST', 'STRAPI', 'WORDPRESS']),
   description: z
     .string()
     .min(6, { message: 'Project Description must be at least 6 characters' }),

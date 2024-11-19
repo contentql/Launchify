@@ -167,6 +167,7 @@ const CreateNewProject = ({ className }: { className?: string }) => {
                           <SelectLabel>Select Template</SelectLabel>
                           <SelectItem value='GHOST'>Ghost</SelectItem>
                           <SelectItem value='STRAPI'>Strapi</SelectItem>
+                          <SelectItem value='WORDPRESS'>WordPress</SelectItem>
                         </SelectGroup>
                       </SelectContent>
                     </Select>

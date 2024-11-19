@@ -89,7 +89,6 @@ export const projectRouter = router({
           data: {
             name: name,
             projectDescription: description,
-
             template,
             user: { relationTo: 'users', value: user?.id },
           },
