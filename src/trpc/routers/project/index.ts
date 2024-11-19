@@ -8,6 +8,7 @@ import {
   ProjectCreationSchema,
   getLatestSchema,
   getProjectsSchema,
+  updateProjectSchema,
 } from './validator'
 
 const payload = await getPayloadHMR({ config: configPromise })
@@ -107,4 +108,82 @@ export const projectRouter = router({
         console.log('Error while getting latest project')
       }
     }),
+  updateProject: userProcedure
+    .input(updateProjectSchema)
+    .mutation(async ({ input, ctx }) => {
+      const { id, ...updateProjectData } = input
+
+      const filterValidValues = (obj: Record<string, any>) =>
+        Object.fromEntries(
+          Object.entries(obj).filter(
+            ([, value]) => value !== undefined && value !== null,
+          ),
+        )
+
+      const data = {
+        ...filterValidValues(updateProjectData),
+      }
+
+      console.log('filtered data', data)
+
+      try {
+        // Check if name exists in the filtered data
+        if (data?.name) {
+          const { totalDocs: totalProjects } = await payload.find({
+            collection: 'projects',
+            where: {
+              and: [
+                {
+                  name: {
+                    equals: data.name,
+                  },
+                },
+                {
+                  deleted: { equals: false },
+                },
+              ],
+            },
+          })
+
+          if (totalProjects > 0) {
+            throw new TRPCError({
+              code: 'CONFLICT',
+              message: 'Project name already exists',
+            })
+          }
+        }
+
+        const updatedProjectedData = await payload.update({
+          collection: 'projects',
+          data,
+          id,
+        })
+
+        return updatedProjectedData
+      } catch (error: any) {
+        console.log('Error while updating project', error.message)
+        throw new TRPCError({
+          code: 'CONFLICT',
+          message: error?.message,
+        })
+      }
+    }),
+
+  // deleteProject: userProcedure
+  //   ?.input(DeleteProjectSchema)
+  //   .mutation(async ({ input }) => {
+  //     const { id } = input
+  //     try {
+  //       await payload.delete({
+  //         collection: 'projects',
+  //         id,
+  //       })
+  //     } catch (error: any) {
+  //       console.log('Error while Deleting project', error)
+  //       throw new TRPCError({
+  //         code: 'INTERNAL_SERVER_ERROR',
+  //         message: error?.message || 'Error while deleting project',
+  //       })
+  //     }
+  //   }),
 })

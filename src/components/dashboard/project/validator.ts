@@ -27,3 +27,9 @@ export const addNewVariableScheme = z.object({
 })
 
 export type addVariableDataType = z.infer<typeof addNewVariableScheme>
+
+export const EditServiceScheme = z.object({
+  id: z.string()?.optional(),
+  serviceName: z.string(),
+})
+export type EditServiceSchemaType = z.infer<typeof EditServiceScheme>

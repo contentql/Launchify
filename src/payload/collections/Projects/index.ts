@@ -90,7 +90,18 @@ export const Projects: CollectionConfig = {
             placeholder: 'Auto-generated after project creation',
           },
         },
+        {
+          name: 'deleted',
+          type: 'checkbox',
+          label: 'Deleted',
+          defaultValue: false,
+          admin: {
+            readOnly: false,
+            description: 'Boolean to identify project deletion in railway.',
+          },
+        },
       ],
+
       admin: {
         position: 'sidebar',
         readOnly: true,
