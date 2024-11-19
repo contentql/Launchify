@@ -32,7 +32,7 @@ export const createGhostTemplate: CollectionBeforeChangeHook = async ({
       //deploy ghost Template
       const ghostTemplate = await templateDeploy({
         name: data?.name,
-        template: data?.templates,
+        template: data?.template,
         projectId: data.projectId,
         environmentId: data.environmentId,
       })
