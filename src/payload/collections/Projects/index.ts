@@ -4,6 +4,7 @@ import { CollectionConfig } from 'payload'
 import { isAdminOrCurrentUser } from './access'
 import { createGhostTemplate } from './hooks/createGhostTemplate'
 import { createService } from './hooks/createService'
+import { deleteRailwayProject } from './hooks/deleteRailwayProject'
 
 // import { assignUserId } from './field-level-hooks/assignUserId'
 
@@ -20,7 +21,7 @@ export const Projects: CollectionConfig = {
   },
 
   hooks: {
-    beforeChange: [createGhostTemplate],
+    beforeChange: [createGhostTemplate, deleteRailwayProject],
     afterChange: [createService],
   },
 

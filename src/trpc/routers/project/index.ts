@@ -26,15 +26,24 @@ export const projectRouter = router({
           user,
           limit,
           page: cursor,
+          depth: 0,
           sort: '-createdAt',
           where: {
-            ...(!user.role?.includes('admin') && {
-              'user.value': {
-                equals: user.id,
+            and: [
+              {
+                deleted: {
+                  equals: false,
+                },
               },
-            }),
+              {
+                ...(!user.role?.includes('admin') && {
+                  'user.value': {
+                    equals: user.id,
+                  },
+                }),
+              },
+            ],
           },
-          depth: 0,
         })
 
         return {

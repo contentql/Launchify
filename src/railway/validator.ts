@@ -73,3 +73,8 @@ export const DeleteCustomDomainSchema = z.object({
   domainId: z.string(),
 })
 export type DeleteCustomDomainType = z.infer<typeof DeleteCustomDomainSchema>
+
+export const DeleteProjectSchema = z.object({
+  projectId: z.string(),
+})
+export type DeleteProjectType = z.infer<typeof DeleteProjectSchema>

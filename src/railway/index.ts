@@ -8,6 +8,7 @@ import { GET_DOMAINS } from './queries/domain/getDomains'
 import { GET_PROJECT_DETAILS } from './queries/getProjectDetails'
 import { GET_SERVICE_DOMAINS } from './queries/getServiceDomains'
 import { CREATE_EMPTY_PROJECT } from './queries/project/createEmptyProject'
+import { DELETE_PROJECT } from './queries/project/deleteProject'
 import { REDEPLOY_SERVICE } from './queries/service/redeployService'
 import { TEMPLATE_DEPLOY } from './queries/templateDeploy'
 import { DELETE_VARIABLE } from './queries/variables/deleteVariable'
@@ -20,6 +21,7 @@ import {
   CreateServiceDomainType,
   CreateWebhookType,
   DeleteCustomDomainType,
+  DeleteProjectType,
   DeleteVariableType,
   RedeployServiceType,
   TemplateDeployType,
@@ -456,5 +458,24 @@ export const deleteCustomDomain = async (input: DeleteCustomDomainType) => {
     return response.data.customDomainDelete
   } catch (error: any) {
     throw new Error('Error during deleting custom domain: ', error)
+  }
+}
+
+export const deleteProject = async (input: DeleteProjectType) => {
+  const { projectId } = input
+
+  const queryVariables = {
+    id: projectId,
+  }
+
+  try {
+    const response = await railwayAPI({
+      query: DELETE_PROJECT,
+      variables: queryVariables,
+    })
+
+    return response.data.projectDelete
+  } catch (error: any) {
+    throw new Error('Error during deleting project: ', error)
   }
 }

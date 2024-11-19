@@ -76,9 +76,12 @@ const ListItem = ({ site }: { site: Project }) => {
     register,
     setValue,
     handleSubmit,
+    watch,
   } = useForm<updateProjectSchemaType>({
     resolver: zodResolver(updateProjectSchema),
   })
+
+  const watchedProjectName = watch('name')
 
   const handleServiceNameChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -110,7 +113,7 @@ const ListItem = ({ site }: { site: Project }) => {
       },
     })
 
-  const { mutate: handleDeleteProject } =
+  const { mutate: handleDeleteProject, isPending: isProjectDeletePending } =
     trpc.project.updateProject.useMutation({
       onSuccess: () => {
         toast.success(`Project deleted successfully`)
@@ -209,8 +212,14 @@ const ListItem = ({ site }: { site: Project }) => {
             />
 
             <DialogFooter>
-              <Button type='submit' className='mt-4' variant={'destructive'}>
-                Delete
+              <Button
+                disabled={
+                  watchedProjectName !== site.name || isProjectDeletePending
+                }
+                type='submit'
+                className='mt-4'
+                variant={'destructive'}>
+                {isProjectDeletePending ? 'Deleting' : 'Delete'}
               </Button>
             </DialogFooter>
           </form>
