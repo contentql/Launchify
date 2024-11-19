@@ -375,9 +375,9 @@ export const getQueryVariables = ({
     },
     WORDPRESS: {
       input: {
-        projectId: '7ce3439b-73ed-4da0-ad36-237150da1f42',
+        projectId: projectId,
         templateId: '292dbcfa-eb54-4b29-b934-4db92865e86b',
-        environmentId: '04dd1cd5-5132-4ca2-988b-9e681059680d',
+        environmentId: environmentId,
         serializedConfig: {
           services: {
             '25f6a837-0069-445c-87fe-b2712dba75ab': {
