@@ -47,6 +47,22 @@ export const Projects: CollectionConfig = {
       },
     },
     {
+      name: 'template',
+      label: 'Template',
+      type: 'select',
+      defaultValue: 'GHOST',
+      options: [
+        {
+          label: 'Ghost',
+          value: 'GHOST',
+        },
+        {
+          label: 'Strapi',
+          value: 'STRAPI',
+        },
+      ],
+    },
+    {
       type: 'join',
       name: 'Services',
       collection: 'services',

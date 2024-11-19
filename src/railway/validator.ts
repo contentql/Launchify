@@ -8,6 +8,7 @@ export type CreateEmptyProjectType = z.infer<typeof CreateEmptyProjectSchema>
 
 export const TemplateDeploySchema = z.object({
   name: z.string(),
+  template: z.string(),
   projectId: z.string(),
   environmentId: z.string(),
 })
