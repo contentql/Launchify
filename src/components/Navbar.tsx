@@ -2,22 +2,61 @@
 
 import { SiteSetting, User } from '@payload-types'
 import { motion, useMotionValueEvent, useScroll } from 'framer-motion'
+import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 
-import { pageLinks } from '@/data/pageLinks'
+import { cn } from '@/utils/cn'
+import { generateMenuLinks } from '@/utils/generateMenuLinks'
 
 import MobileMenu from './MobileMenu'
 import ProfileDropdown from './ProfileDropdown'
 import Button from './common/Button'
-import Logo from './common/Logo'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from './common/Dropdown'
 
 const Navbar = ({ user, metadata }: { user: User; metadata: SiteSetting }) => {
   const [hidden, setHidden] = useState(false)
   const { scrollY } = useScroll()
 
-  console.log('MetaData', metadata)
+  const { navbar, footer } = metadata
+  const { logo, menuLinks } = navbar
+
+  let logoDetails = {
+    url: '',
+    alt: '',
+    height: 0,
+    width: 0,
+  }
+
+  const navLinks = menuLinks?.length ? generateMenuLinks(menuLinks) : []
+
+  if (Object.keys(logo).length && logo?.imageUrl === 'string') {
+    logoDetails = {
+      url: logo?.imageUrl,
+      alt: `${metadata.general?.title} logo`,
+      height: logo?.height!,
+      width: logo?.width!,
+    }
+  } else if (Object.keys(logo).length && typeof logo?.imageUrl !== 'string') {
+    logoDetails = {
+      url: logo.imageUrl?.url!,
+      alt: logo.imageUrl?.alt || `${metadata.general?.title} logo`,
+      height: logo?.height!,
+      width: logo?.width!,
+    }
+  }
+
+  // if in case image or nav-links are not specified hiding the navbar
+  if (!logoDetails.url && navLinks?.length === 0) {
+    return null
+  }
 
   const pathName = usePathname()
   let paths = pathName.split('/')
@@ -40,8 +79,15 @@ const Navbar = ({ user, metadata }: { user: User; metadata: SiteSetting }) => {
       <div className='mx-auto flex max-w-7xl items-center justify-between  px-4 md:px-12 lg:px-20 '>
         <Link
           href={user ? '/dashboard' : '/'}
-          className='inline-flex h-10 w-28 gap-x-2'>
-          <Logo />
+          className={cn('inline-flex w-32 items-center gap-x-2')}>
+          {/* <Logo /> */}
+          <Image
+            className='h-6'
+            width={1000}
+            height={1000}
+            src={logoDetails?.url}
+            alt=''
+          />
         </Link>
         {user ? (
           <ul className='flex items-center justify-end'>
@@ -63,15 +109,42 @@ const Navbar = ({ user, metadata }: { user: User; metadata: SiteSetting }) => {
             <nav className='hidden lg:flex'>
               {/* Desktop menu links */}
               <ul className='flex items-center'>
-                {pageLinks.header.map(({ label, href }) => (
-                  <li key={label}>
-                    <Link
-                      className='mx-4 text-sm font-medium text-base-content/80 transition duration-150 ease-in-out hover:text-base-content lg:mx-5'
-                      href={href}>
-                      {label}
-                    </Link>
-                  </li>
-                ))}
+                {navLinks.map((navLink, index) =>
+                  navLink?.type === 'group' ? (
+                    <li key={navLink?.label}>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger className='mx-4 text-sm font-medium text-base-content/80 transition duration-150 ease-in-out hover:text-base-content lg:mx-5'>
+                          {navLink?.label}
+                          <DropdownMenuGroup>
+                            <DropdownMenuContent>
+                              {navLink?.children?.map((subLink, index) => (
+                                <DropdownMenuItem>
+                                  <Link
+                                    className='mx-4 text-sm font-medium text-base-content/80 transition duration-150 ease-in-out hover:text-base-content lg:mx-5'
+                                    href={subLink?.href || ''}
+                                    target={
+                                      subLink?.newTab ? '_blank' : '_self'
+                                    }>
+                                    {subLink?.label}
+                                  </Link>
+                                </DropdownMenuItem>
+                              ))}
+                            </DropdownMenuContent>
+                          </DropdownMenuGroup>
+                        </DropdownMenuTrigger>
+                      </DropdownMenu>
+                    </li>
+                  ) : (
+                    <li key={navLink?.label}>
+                      <Link
+                        className='mx-4 text-sm font-medium text-base-content/80 transition duration-150 ease-in-out hover:text-base-content lg:mx-5'
+                        href={navLink?.href || ''}
+                        target={navLink?.newTab ? '_blank' : '_self'}>
+                        {navLink?.label}
+                      </Link>
+                    </li>
+                  ),
+                )}
               </ul>
             </nav>
             <div className='flex items-center'>
@@ -85,7 +158,7 @@ const Navbar = ({ user, metadata }: { user: User; metadata: SiteSetting }) => {
                   <Link href='sign-up'>SignUp</Link>
                 </Button>
               </div>
-              <MobileMenu />
+              <MobileMenu navLinks={navLinks} />
             </div>
           </div>
         )}
