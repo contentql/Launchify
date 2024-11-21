@@ -185,7 +185,7 @@ export interface Service {
 export interface Page {
   id: string;
   title: string;
-  layout?: (HeroType | FeatureType | AboutType | ThemesType)[] | null;
+  layout?: (HeroType | FeatureType | AboutType | ThemesType | FaqsType | PricingType)[] | null;
   isHome?: boolean | null;
   isDynamic?: boolean | null;
   slugMode?: ('generate' | 'custom') | null;
@@ -264,6 +264,52 @@ export interface ThemesType {
   id?: string | null;
   blockName?: string | null;
   blockType: 'ThemesBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FaqsType".
+ */
+export interface FaqsType {
+  title: string;
+  faqs?:
+    | {
+        question: string;
+        answer: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'FaqsBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PricingType".
+ */
+export interface PricingType {
+  badge: string;
+  title: string;
+  description?: string | null;
+  pricing?:
+    | {
+        type: string;
+        price: string;
+        subscription: string;
+        description: string;
+        buttonText: string;
+        features?:
+          | {
+              feature: string;
+              id?: string | null;
+            }[]
+          | null;
+        active?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'PricingBlock';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
