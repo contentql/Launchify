@@ -16,6 +16,9 @@ export const Media: CollectionConfig = {
   // admin: {
   //   group: ADMIN_UPLOADS_GROUP,
   // },
+  admin: {
+    group: 'Content',
+  },
   upload: {
     imageSizes: [
       {

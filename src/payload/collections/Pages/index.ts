@@ -1,5 +1,6 @@
 import type { CollectionConfig } from 'payload'
 
+import { blocks } from '@/payload/blocks'
 import { layoutField } from '@/payload/fields/layout'
 import { pathField, pathModeField } from '@/payload/fields/path'
 import { slugField, slugModeField } from '@/payload/fields/slug'
@@ -41,7 +42,7 @@ export const Pages: CollectionConfig = {
               unique: true,
             },
             layoutField({
-              blocks: [],
+              blocks: blocks,
             }),
           ],
         },

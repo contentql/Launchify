@@ -4,6 +4,7 @@ import { projectRouter } from '@/trpc/routers/project'
 import { userRouter } from '@/trpc/routers/user'
 
 import { cloudflareRouter } from './cloudflare'
+import { pageRouter } from './page'
 import { railwayRouter } from './railway'
 import { serviceRouter } from './service'
 
@@ -14,6 +15,7 @@ export const appRouter = router({
   service: serviceRouter,
   railway: railwayRouter,
   cloudflare: cloudflareRouter,
+  page: pageRouter,
 })
 
 export type AppRouter = typeof appRouter

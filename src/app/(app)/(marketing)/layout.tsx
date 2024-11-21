@@ -1,24 +1,24 @@
-// import DashBoardNavbar from '@/components/dashboard/DashBoardNavbar'
 import { headers } from 'next/headers'
 
-import Footer from '@/components/Footer'
-import Navbar from '@/components/Navbar'
+// import Branding from '@/components/Branding'
 import { getCurrentUser } from '@/utils/getCurrentUser'
 
-interface LayoutProps {
-  children: React.ReactNode
-}
+// import { MetadataProvider } from '@/utils/metadataContext'
 
-const DashboardLayout: React.FC<LayoutProps> = async ({ children }) => {
+const MarketingLayout = async ({ children }: { children: React.ReactNode }) => {
+  // const metadata = await serverClient.siteSettings.getSiteSettings()
+
   const headersList = await headers()
   const user = await getCurrentUser(headersList)
+
   return (
-    <div className='mx-auto grid min-h-screen w-full  grid-rows-[1fr_auto] overflow-hidden text-base-content'>
-      <Navbar user={user} />
-      <div className='pb-8 pt-24'>{children}</div>
-      <Footer />
+    <div className='flex min-h-screen flex-col'>
+      {/* <Navbar metadata={metadata} /> */}
+      <main className='container mt-16 flex-grow'>{children}</main>
+      {/* <Footer metadata={metadata} />
+        <Branding /> */}
     </div>
   )
 }
 
-export default DashboardLayout
+export default MarketingLayout

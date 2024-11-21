@@ -3,6 +3,7 @@ import { mongooseAdapter } from '@payloadcms/db-mongodb'
 import { resendAdapter } from '@payloadcms/email-resend'
 import { nestedDocsPlugin } from '@payloadcms/plugin-nested-docs'
 import { slateEditor } from '@payloadcms/richtext-slate'
+import { s3Storage } from '@payloadcms/storage-s3'
 import path from 'path'
 import { RichTextAdapterProvider, buildConfig } from 'payload'
 import sharp from 'sharp'
@@ -79,6 +80,20 @@ export default buildConfig({
     apiKey: env.RESEND_API_KEY,
   }),
   plugins: [
+    s3Storage({
+      collections: {
+        ['media']: true,
+      },
+      bucket: env.S3_BUCKET,
+      config: {
+        endpoint: env.S3_ENDPOINT,
+        credentials: {
+          accessKeyId: env.S3_ACCESS_KEY_ID,
+          secretAccessKey: env.S3_SECRET_ACCESS_KEY,
+        },
+        region: env.S3_REGION,
+      },
+    }),
     nestedDocsPlugin({
       collections: ['pages'],
       generateURL: generateBreadcrumbsUrl,

@@ -91,9 +91,6 @@ export interface Media {
   focalX?: number | null;
   focalY?: number | null;
   sizes?: {
-    square?: {
-      url?: string | null;
-    };
     thumbnail?: {
       url?: string | null;
       width?: number | null;
@@ -188,7 +185,7 @@ export interface Service {
 export interface Page {
   id: string;
   title: string;
-  layout?: unknown[] | null;
+  layout?: HeroType[] | null;
   isHome?: boolean | null;
   isDynamic?: boolean | null;
   slugMode?: ('generate' | 'custom') | null;
@@ -207,6 +204,22 @@ export interface Page {
   updatedAt: string;
   createdAt: string;
   _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "HeroType".
+ */
+export interface HeroType {
+  title: string;
+  description: string;
+  primaryButton?: string | null;
+  primaryButtonLink?: string | null;
+  secondaryButton?: string | null;
+  secondaryButtonLink?: string | null;
+  image: string | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'HeroBlock';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
