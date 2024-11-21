@@ -1,6 +1,6 @@
 'use client'
 
-import { User } from '@payload-types'
+import { SiteSetting, User } from '@payload-types'
 import { motion, useMotionValueEvent, useScroll } from 'framer-motion'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -13,9 +13,11 @@ import ProfileDropdown from './ProfileDropdown'
 import Button from './common/Button'
 import Logo from './common/Logo'
 
-const Navbar = ({ user }: { user: User }) => {
+const Navbar = ({ user, metadata }: { user: User; metadata: SiteSetting }) => {
   const [hidden, setHidden] = useState(false)
   const { scrollY } = useScroll()
+
+  console.log('MetaData', metadata)
 
   const pathName = usePathname()
   let paths = pathName.split('/')

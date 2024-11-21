@@ -7,6 +7,7 @@ import { cloudflareRouter } from './cloudflare'
 import { pageRouter } from './page'
 import { railwayRouter } from './railway'
 import { serviceRouter } from './service'
+import { siteSettingsRouter } from './site-settings'
 
 export const appRouter = router({
   auth: authRouter,
@@ -16,6 +17,7 @@ export const appRouter = router({
   railway: railwayRouter,
   cloudflare: cloudflareRouter,
   page: pageRouter,
+  siteSettings: siteSettingsRouter,
 })
 
 export type AppRouter = typeof appRouter
