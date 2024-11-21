@@ -12,9 +12,9 @@ const MarketingLayout = async ({ children }: { children: React.ReactNode }) => {
   const user = await getCurrentUser(headersList)
 
   return (
-    <div className='flex min-h-screen flex-col'>
+    <div className='mx-auto grid min-h-screen w-full  grid-rows-[1fr_auto] overflow-hidden text-base-content'>
       {/* <Navbar metadata={metadata} /> */}
-      <main className='container mt-16 flex-grow'>{children}</main>
+      <main className='pb-8 pt-24'>{children}</main>
       {/* <Footer metadata={metadata} />
         <Branding /> */}
     </div>

@@ -4,6 +4,7 @@ import { Params } from '../types'
 import { HeroType, Media } from '@payload-types'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
+import Link from 'next/link'
 
 import Button from '@/components/common/Button'
 import Container from '@/components/common/Container'
@@ -29,14 +30,26 @@ const Hero: React.FC<HeroProps> = ({ params, ...block }) => {
               {block?.description}
             </p>
             <div className='space-x-4'>
-              <Button>Start your blog</Button>
-              <Button variant={'outline'}>Learn More</Button>
+              {block?.primaryButton && (
+                <Button>
+                  <Link href={block?.primaryButtonLink || ''}>
+                    {block?.primaryButton}
+                  </Link>
+                </Button>
+              )}
+              {block?.secondaryButton && (
+                <Button variant={'outline'}>
+                  <Link href={block?.secondaryButtonLink || ''}>
+                    {block?.secondaryButton}
+                  </Link>
+                </Button>
+              )}
             </div>
           </div>
           <div className='flex w-full'>
             <motion.div className='h-full w-full' variants={scrollAnimation}>
               <Image
-                className='object-fit max-h-[600px]'
+                className='object-fit max-h-[650px]'
                 src={
                   (block?.image as Media)?.url ||
                   '/images/home/people-talking.png'
