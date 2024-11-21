@@ -185,7 +185,7 @@ export interface Service {
 export interface Page {
   id: string;
   title: string;
-  layout?: (HeroType | FeatureType | AboutType)[] | null;
+  layout?: (HeroType | FeatureType | AboutType | ThemesType)[] | null;
   isHome?: boolean | null;
   isDynamic?: boolean | null;
   slugMode?: ('generate' | 'custom') | null;
@@ -245,6 +245,25 @@ export interface AboutType {
   id?: string | null;
   blockName?: string | null;
   blockType: 'AboutBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ThemesType".
+ */
+export interface ThemesType {
+  title: string;
+  description: string;
+  Themes?:
+    | {
+        name: string;
+        image: string | Media;
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'ThemesBlock';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
