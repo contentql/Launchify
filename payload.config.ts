@@ -14,6 +14,7 @@ import { Pages } from '@/payload/collections/Pages'
 import { Projects } from '@/payload/collections/Projects'
 import { Services } from '@/payload/collections/Services'
 import { Users } from '@/payload/collections/Users'
+import { siteSettings } from '@/payload/globals/SiteSettings'
 import { generateBreadcrumbsUrl } from '@/utils/generateBreadcrumbsUrl'
 
 const filename = fileURLToPath(import.meta.url)
@@ -71,6 +72,7 @@ export default buildConfig({
     user: Users.slug,
   },
   collections: [Users, Media, Projects, Services, Pages],
+  globals: [siteSettings],
   db: mongooseAdapter({
     url: env.DATABASE_URI,
   }),

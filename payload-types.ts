@@ -23,7 +23,9 @@ export interface Config {
   db: {
     defaultIDType: string;
   };
-  globals: {};
+  globals: {
+    'site-settings': SiteSetting;
+  };
   locale: null;
   user: User & {
     collection: 'users';
@@ -407,6 +409,129 @@ export interface PayloadMigration {
   batch?: number | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings".
+ */
+export interface SiteSetting {
+  id: string;
+  general: {
+    title: string;
+    description: string;
+    faviconUrl: string | Media;
+    ogImageUrl: string | Media;
+    keywords?: string[] | null;
+  };
+  navbar: {
+    logo: BrandLogo;
+    menuLinks?:
+      | {
+          group?: boolean | null;
+          menuLink?: {
+            type?: ('reference' | 'custom') | null;
+            newTab?: boolean | null;
+            label: string;
+            page?: {
+              relationTo: 'pages';
+              value: string | Page;
+            } | null;
+            url?: string | null;
+            id?: string | null;
+          };
+          menuLinkGroup?: {
+            groupTitle: string;
+            groupLinks?:
+              | {
+                  type?: ('reference' | 'custom') | null;
+                  newTab?: boolean | null;
+                  label: string;
+                  page?: {
+                    relationTo: 'pages';
+                    value: string | Page;
+                  } | null;
+                  url?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+          };
+          id?: string | null;
+        }[]
+      | null;
+  };
+  footer: {
+    logo: BrandLogo;
+    footerLinks?:
+      | {
+          group?: boolean | null;
+          menuLink?: {
+            type?: ('reference' | 'custom') | null;
+            newTab?: boolean | null;
+            label: string;
+            page?: {
+              relationTo: 'pages';
+              value: string | Page;
+            } | null;
+            url?: string | null;
+            id?: string | null;
+          };
+          menuLinkGroup?: {
+            groupTitle: string;
+            groupLinks?:
+              | {
+                  type?: ('reference' | 'custom') | null;
+                  newTab?: boolean | null;
+                  label: string;
+                  page?: {
+                    relationTo: 'pages';
+                    value: string | Page;
+                  } | null;
+                  url?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+          };
+          id?: string | null;
+        }[]
+      | null;
+    socialLinks?:
+      | {
+          platform:
+            | 'website'
+            | 'facebook'
+            | 'instagram'
+            | 'twitter'
+            | 'linkedin'
+            | 'youtube'
+            | 'tiktok'
+            | 'pinterest'
+            | 'snapchat'
+            | 'reddit'
+            | 'tumblr'
+            | 'whatsapp'
+            | 'telegram'
+            | 'github'
+            | 'medium'
+            | 'quora'
+            | 'discord';
+          value: string;
+          id?: string | null;
+        }[]
+      | null;
+    copyright?: string | null;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "BrandLogo".
+ */
+export interface BrandLogo {
+  imageUrl: string | Media;
+  height?: number | null;
+  width?: number | null;
+  description?: string | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
