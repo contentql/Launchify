@@ -1,4 +1,5 @@
 import { AboutBlock } from './About'
+import { ContactBlock } from './Contact'
 import { FaqsBlock } from './Faqs'
 import { FeatureBlock } from './Feature'
 import { FeaturesBlock } from './Features'
@@ -14,4 +15,5 @@ export const blocksJSX = {
   FaqsBlock,
   PricingBlock,
   FeaturesBlock,
+  ContactBlock,
 }

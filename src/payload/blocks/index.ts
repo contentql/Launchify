@@ -1,5 +1,6 @@
 // Exporting an array that consolidates all block configurations
 import { AboutConfig } from './About'
+import { ContactConfig } from './Contact'
 import { FaqsConfig } from './Faqs'
 import { FeatureConfig } from './Feature'
 import { FeaturesConfig } from './Features'
@@ -16,4 +17,5 @@ export const blocks = [
   FaqsConfig,
   PricingConfig,
   FeaturesConfig,
+  ContactConfig,
 ]

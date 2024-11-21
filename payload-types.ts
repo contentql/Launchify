@@ -185,7 +185,9 @@ export interface Service {
 export interface Page {
   id: string;
   title: string;
-  layout?: (HeroType | FeatureType | AboutType | ThemesType | FaqsType | PricingType | FeaturesType)[] | null;
+  layout?:
+    | (HeroType | FeatureType | AboutType | ThemesType | FaqsType | PricingType | FeaturesType | ContactType)[]
+    | null;
   isHome?: boolean | null;
   isDynamic?: boolean | null;
   slugMode?: ('generate' | 'custom') | null;
@@ -326,6 +328,16 @@ export interface FeaturesType {
   id?: string | null;
   blockName?: string | null;
   blockType: 'FeaturesBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContactType".
+ */
+export interface ContactType {
+  title: string;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'ContactBlock';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
