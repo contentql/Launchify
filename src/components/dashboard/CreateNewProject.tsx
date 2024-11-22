@@ -13,6 +13,7 @@ import {
 } from '../common/Select'
 import { Textarea } from '../common/Textarea'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { SiteSetting } from '@payload-types'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import slugify from 'slugify'
@@ -30,10 +31,23 @@ import { cn } from '@/utils/cn'
 
 import { ProjectSchema, ProjectSchemaType } from './validator'
 
-const CreateNewProject = ({ className }: { className?: string }) => {
+const CreateNewProject = ({
+  className,
+  metadata,
+}: {
+  className?: string
+  metadata: SiteSetting
+}) => {
   const [open, setOpen] = useState(false)
   const trpcUtils = trpc.useUtils()
 
+  const { data: siteSettings } = trpc.siteSettings.getSiteSettings.useQuery(
+    undefined,
+    {
+      initialData: metadata,
+    },
+  )
+  const { templates } = siteSettings
   const {
     formState: { errors },
     handleSubmit,
@@ -87,6 +101,7 @@ const CreateNewProject = ({ className }: { className?: string }) => {
       template: data?.template,
     })
   }
+  console.log('Templates', templates)
   return (
     <>
       <Button className={cn(className)} onClick={() => setOpen(true)}>
@@ -165,9 +180,14 @@ const CreateNewProject = ({ className }: { className?: string }) => {
                       <SelectContent>
                         <SelectGroup>
                           <SelectLabel>Select Template</SelectLabel>
-                          <SelectItem value='GHOST'>Ghost</SelectItem>
-                          <SelectItem value='STRAPI'>Strapi</SelectItem>
-                          <SelectItem value='WORDPRESS'>WordPress</SelectItem>
+                          {templates?.map((template, index) => (
+                            <SelectItem
+                              className='capitalize'
+                              key={index}
+                              value={template}>
+                              <p className='capitalize'>{template}</p>
+                            </SelectItem>
+                          ))}
                         </SelectGroup>
                       </SelectContent>
                     </Select>

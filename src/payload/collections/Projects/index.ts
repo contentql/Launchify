@@ -50,7 +50,6 @@ export const Projects: CollectionConfig = {
       name: 'template',
       label: 'Template',
       type: 'text',
-      defaultValue: 'GHOST',
       required: true,
     },
     {
