@@ -29,6 +29,12 @@ const Navbar = ({ user, metadata }: { user: User; metadata: SiteSetting }) => {
   let paths = pathName.split('/')
   let isExists = paths.includes('dashboard')
 
+  useMotionValueEvent(scrollY, 'change', latest => {
+    const prev = scrollY?.getPrevious()
+    if (prev && latest > prev && latest >= 150) setHidden(true)
+    else setHidden(false)
+  })
+
   const { navbar, footer } = metadata
   const { logo, menuLinks } = navbar
 
@@ -62,11 +68,6 @@ const Navbar = ({ user, metadata }: { user: User; metadata: SiteSetting }) => {
     return null
   }
 
-  useMotionValueEvent(scrollY, 'change', latest => {
-    const prev = scrollY?.getPrevious()
-    if (prev && latest > prev && latest >= 150) setHidden(true)
-    else setHidden(false)
-  })
   return (
     <motion.header
       variants={{
