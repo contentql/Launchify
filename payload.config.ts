@@ -1,16 +1,21 @@
 import { env } from '@env'
 import { mongooseAdapter } from '@payloadcms/db-mongodb'
 import { resendAdapter } from '@payloadcms/email-resend'
+import { nestedDocsPlugin } from '@payloadcms/plugin-nested-docs'
 import { slateEditor } from '@payloadcms/richtext-slate'
+import { s3Storage } from '@payloadcms/storage-s3'
 import path from 'path'
 import { RichTextAdapterProvider, buildConfig } from 'payload'
 import sharp from 'sharp'
 import { fileURLToPath } from 'url'
 
 import { Media } from '@/payload/collections/Media'
+import { Pages } from '@/payload/collections/Pages'
 import { Projects } from '@/payload/collections/Projects'
 import { Services } from '@/payload/collections/Services'
 import { Users } from '@/payload/collections/Users'
+import { siteSettings } from '@/payload/globals/SiteSettings'
+import { generateBreadcrumbsUrl } from '@/utils/generateBreadcrumbsUrl'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -66,7 +71,8 @@ export default buildConfig({
   admin: {
     user: Users.slug,
   },
-  collections: [Users, Media, Projects, Services],
+  collections: [Users, Media, Projects, Services, Pages],
+  globals: [siteSettings],
   db: mongooseAdapter({
     url: env.DATABASE_URI,
   }),
@@ -75,6 +81,26 @@ export default buildConfig({
     defaultFromName: env.RESEND_SENDER_NAME,
     apiKey: env.RESEND_API_KEY,
   }),
+  plugins: [
+    s3Storage({
+      collections: {
+        ['media']: true,
+      },
+      bucket: env.S3_BUCKET,
+      config: {
+        endpoint: env.S3_ENDPOINT,
+        credentials: {
+          accessKeyId: env.S3_ACCESS_KEY_ID,
+          secretAccessKey: env.S3_SECRET_ACCESS_KEY,
+        },
+        region: env.S3_REGION,
+      },
+    }),
+    nestedDocsPlugin({
+      collections: ['pages'],
+      generateURL: generateBreadcrumbsUrl,
+    }),
+  ],
 
   sharp,
   editor,
