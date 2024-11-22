@@ -2,10 +2,19 @@
 
 import Button from '../common/Button'
 import Input from '../common/Input'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from '../common/Select'
 import { Textarea } from '../common/Textarea'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { Controller, useForm } from 'react-hook-form'
 import slugify from 'slugify'
 import { toast } from 'sonner'
 
@@ -21,7 +30,13 @@ import { cn } from '@/utils/cn'
 
 import { ProjectSchema, ProjectSchemaType } from './validator'
 
-const CreateNewProject = ({ className }: { className?: string }) => {
+const CreateNewProject = ({
+  className,
+  templates,
+}: {
+  className?: string
+  templates: string[]
+}) => {
   const [open, setOpen] = useState(false)
   const trpcUtils = trpc.useUtils()
 
@@ -31,6 +46,7 @@ const CreateNewProject = ({ className }: { className?: string }) => {
     setError,
     register,
     setValue,
+    control,
   } = useForm<ProjectSchemaType>({
     resolver: zodResolver(ProjectSchema),
   })
@@ -74,8 +90,10 @@ const CreateNewProject = ({ className }: { className?: string }) => {
     createProject({
       description: data?.description,
       name: data?.name,
+      template: data?.template,
     })
   }
+  console.log('Templates', templates)
   return (
     <>
       <Button className={cn(className)} onClick={() => setOpen(true)}>
@@ -132,6 +150,44 @@ const CreateNewProject = ({ className }: { className?: string }) => {
                 {errors.description && (
                   <p className='mt-1 text-xs text-error'>
                     {errors.description.message}
+                  </p>
+                )}
+              </div>
+              <div>
+                <label
+                  className='text-sm font-medium text-slate-300'
+                  htmlFor='siteType'>
+                  Project Type <span className='text-red-500'>*</span>
+                </label>
+                <Controller
+                  name='template'
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}>
+                      <SelectTrigger className='mt-2 w-full'>
+                        <SelectValue placeholder='Select template' />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectGroup>
+                          <SelectLabel>Select Template</SelectLabel>
+                          {templates?.map((template, index) => (
+                            <SelectItem
+                              className='capitalize'
+                              key={index}
+                              value={template}>
+                              <p className='capitalize'>{template}</p>
+                            </SelectItem>
+                          ))}
+                        </SelectGroup>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                {errors?.template && (
+                  <p className='mt-1 text-xs text-error'>
+                    {errors?.template.message}
                   </p>
                 )}
               </div>

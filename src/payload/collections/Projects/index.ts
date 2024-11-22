@@ -47,6 +47,12 @@ export const Projects: CollectionConfig = {
       },
     },
     {
+      name: 'template',
+      label: 'Template',
+      type: 'text',
+      required: true,
+    },
+    {
       type: 'join',
       name: 'Services',
       collection: 'services',

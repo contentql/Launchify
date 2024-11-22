@@ -22,6 +22,8 @@ export const createGhostTemplate: CollectionBeforeChangeHook = async ({
       data.projectId = emptyProject.id
       data.environmentId = emptyProject.environments.edges.at(0).node.id
 
+      console.log('project id', emptyProject.id)
+
       await createWebhook({
         projectId: data.projectId,
         url: `${env.PAYLOAD_URL}/api/webhook/railway`,
@@ -30,6 +32,7 @@ export const createGhostTemplate: CollectionBeforeChangeHook = async ({
       //deploy ghost Template
       const ghostTemplate = await templateDeploy({
         name: data?.name,
+        template: data?.template,
         projectId: data.projectId,
         environmentId: data.environmentId,
       })

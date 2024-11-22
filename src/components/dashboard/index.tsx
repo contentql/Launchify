@@ -2,7 +2,7 @@
 
 import Container from '../common/Container'
 import Loading from '../common/Loading'
-import { Project } from '@payload-types'
+import { Project, SiteSetting } from '@payload-types'
 import { useEffect } from 'react'
 import { useInView } from 'react-intersection-observer'
 
@@ -11,10 +11,18 @@ import { trpc } from '@/trpc/client'
 import CreateNewProject from './CreateNewProject'
 import List from './List'
 
-const DashboardView = () => {
+const DashboardView = ({ metadata }: { metadata: SiteSetting }) => {
   const { ref, inView } = useInView({
     threshold: 1,
   })
+
+  const { data: siteSettings } = trpc.siteSettings.getSiteSettings.useQuery(
+    undefined,
+    {
+      initialData: metadata,
+    },
+  )
+  const { templates } = siteSettings
 
   const {
     data: projects,
@@ -50,12 +58,13 @@ const DashboardView = () => {
       <div className='relative space-y-4 px-2'>
         <div className='flex items-center justify-between'>
           <h2 className='text-left text-2xl font-bold'>Your blog sites</h2>
-          <CreateNewProject />
+          <CreateNewProject templates={templates as string[]} />
         </div>
         <List
           projects={allProjects as Project[]}
           isLoading={isLoading}
           isProjectsEmpty={isProjectsEmpty}
+          templates={templates as string[]}
         />
         <div className='mt-4 w-full' ref={ref}>
           {isFetchingNextPage && (

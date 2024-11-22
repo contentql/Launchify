@@ -15,6 +15,7 @@ export interface Config {
     media: Media;
     projects: Project;
     services: Service;
+    pages: Page;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
     'payload-migrations': PayloadMigration;
@@ -22,7 +23,9 @@ export interface Config {
   db: {
     defaultIDType: string;
   };
-  globals: {};
+  globals: {
+    'site-settings': SiteSetting;
+  };
   locale: null;
   user: User & {
     collection: 'users';
@@ -90,9 +93,6 @@ export interface Media {
   focalX?: number | null;
   focalY?: number | null;
   sizes?: {
-    square?: {
-      url?: string | null;
-    };
     thumbnail?: {
       url?: string | null;
       width?: number | null;
@@ -127,6 +127,7 @@ export interface Project {
   id: string;
   name?: string | null;
   projectDescription?: string | null;
+  template: string;
   Services?: {
     docs?: (string | Service)[] | null;
     hasNextPage?: boolean | null;
@@ -181,6 +182,167 @@ export interface Service {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "pages".
+ */
+export interface Page {
+  id: string;
+  title: string;
+  layout?:
+    | (HeroType | FeatureType | AboutType | ThemesType | FaqsType | PricingType | FeaturesType | ContactType)[]
+    | null;
+  isHome?: boolean | null;
+  isDynamic?: boolean | null;
+  slugMode?: ('generate' | 'custom') | null;
+  slug?: string | null;
+  pathMode?: ('generate' | 'custom') | null;
+  path?: string | null;
+  parent?: (string | null) | Page;
+  breadcrumbs?:
+    | {
+        doc?: (string | null) | Page;
+        url?: string | null;
+        label?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "HeroType".
+ */
+export interface HeroType {
+  title: string;
+  description: string;
+  primaryButton?: string | null;
+  primaryButtonLink?: string | null;
+  secondaryButton?: string | null;
+  secondaryButtonLink?: string | null;
+  image: string | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'HeroBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FeatureType".
+ */
+export interface FeatureType {
+  title: string;
+  description: string;
+  image1: string | Media;
+  image2: string | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'FeatureBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "AboutType".
+ */
+export interface AboutType {
+  title: string;
+  description: string;
+  image: string | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'AboutBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ThemesType".
+ */
+export interface ThemesType {
+  title: string;
+  description: string;
+  Themes?:
+    | {
+        name: string;
+        image: string | Media;
+        url: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'ThemesBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FaqsType".
+ */
+export interface FaqsType {
+  title: string;
+  faqs?:
+    | {
+        question: string;
+        answer: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'FaqsBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PricingType".
+ */
+export interface PricingType {
+  badge: string;
+  title: string;
+  description?: string | null;
+  pricing?:
+    | {
+        type: string;
+        price: string;
+        subscription: string;
+        description: string;
+        buttonText: string;
+        features?:
+          | {
+              feature: string;
+              id?: string | null;
+            }[]
+          | null;
+        active?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'PricingBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FeaturesType".
+ */
+export interface FeaturesType {
+  features?:
+    | {
+        title: string;
+        description: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'FeaturesBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContactType".
+ */
+export interface ContactType {
+  title: string;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'ContactBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
@@ -201,6 +363,10 @@ export interface PayloadLockedDocument {
     | ({
         relationTo: 'services';
         value: string | Service;
+      } | null)
+    | ({
+        relationTo: 'pages';
+        value: string | Page;
       } | null);
   globalSlug?: string | null;
   user: {
@@ -243,6 +409,130 @@ export interface PayloadMigration {
   batch?: number | null;
   updatedAt: string;
   createdAt: string;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "site-settings".
+ */
+export interface SiteSetting {
+  id: string;
+  general: {
+    title: string;
+    description: string;
+    faviconUrl: string | Media;
+    ogImageUrl: string | Media;
+    keywords?: string[] | null;
+  };
+  navbar: {
+    logo: BrandLogo;
+    menuLinks?:
+      | {
+          group?: boolean | null;
+          menuLink?: {
+            type?: ('reference' | 'custom') | null;
+            newTab?: boolean | null;
+            label: string;
+            page?: {
+              relationTo: 'pages';
+              value: string | Page;
+            } | null;
+            url?: string | null;
+            id?: string | null;
+          };
+          menuLinkGroup?: {
+            groupTitle: string;
+            groupLinks?:
+              | {
+                  type?: ('reference' | 'custom') | null;
+                  newTab?: boolean | null;
+                  label: string;
+                  page?: {
+                    relationTo: 'pages';
+                    value: string | Page;
+                  } | null;
+                  url?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+          };
+          id?: string | null;
+        }[]
+      | null;
+  };
+  footer: {
+    logo: BrandLogo;
+    footerLinks?:
+      | {
+          group?: boolean | null;
+          menuLink?: {
+            type?: ('reference' | 'custom') | null;
+            newTab?: boolean | null;
+            label: string;
+            page?: {
+              relationTo: 'pages';
+              value: string | Page;
+            } | null;
+            url?: string | null;
+            id?: string | null;
+          };
+          menuLinkGroup?: {
+            groupTitle: string;
+            groupLinks?:
+              | {
+                  type?: ('reference' | 'custom') | null;
+                  newTab?: boolean | null;
+                  label: string;
+                  page?: {
+                    relationTo: 'pages';
+                    value: string | Page;
+                  } | null;
+                  url?: string | null;
+                  id?: string | null;
+                }[]
+              | null;
+          };
+          id?: string | null;
+        }[]
+      | null;
+    socialLinks?:
+      | {
+          platform:
+            | 'website'
+            | 'facebook'
+            | 'instagram'
+            | 'twitter'
+            | 'linkedin'
+            | 'youtube'
+            | 'tiktok'
+            | 'pinterest'
+            | 'snapchat'
+            | 'reddit'
+            | 'tumblr'
+            | 'whatsapp'
+            | 'telegram'
+            | 'github'
+            | 'medium'
+            | 'quora'
+            | 'discord';
+          value: string;
+          id?: string | null;
+        }[]
+      | null;
+    copyright?: string | null;
+  };
+  templates?: ('GHOST' | 'STRAPI' | 'WORDPRESS')[] | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "BrandLogo".
+ */
+export interface BrandLogo {
+  imageUrl: string | Media;
+  height?: number | null;
+  width?: number | null;
+  description?: string | null;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

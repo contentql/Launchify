@@ -11,7 +11,6 @@ export const deleteRailwayProject: CollectionBeforeChangeHook = async ({
   context,
 }) => {
   const { payload } = req
-
   if (
     operation === 'update' &&
     !originalDoc?.deleted &&

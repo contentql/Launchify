@@ -3,9 +3,7 @@
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
 
-import { pageLinks } from '@/data/pageLinks'
-
-export default function MobileMenu() {
+export default function MobileMenu({ navLinks }: { navLinks: any }) {
   const [mobileNavOpen, setMobileNavOpen] = useState<boolean>(false)
 
   const trigger = useRef<HTMLButtonElement>(null)
@@ -68,7 +66,7 @@ export default function MobileMenu() {
             : { maxHeight: 0, opacity: 0.8 }
         }>
         <ul className='rounded-md border bg-base-200 px-4 py-1.5 shadow-lg [border-image:linear-gradient(to_right,theme(colors.slate.700/.3),theme(colors.slate.700),theme(colors.slate.700/.3))1]  '>
-          {pageLinks.header.map(({ label, href }) => (
+          {/* {pageLinks.header.map(({ label, href }) => (
             <li key={label}>
               <Link
                 className='flex py-1.5 text-sm font-medium text-base-content/80 hover:text-base-content'
@@ -77,7 +75,30 @@ export default function MobileMenu() {
                 {label}
               </Link>
             </li>
-          ))}
+          ))} */}
+          {navLinks?.map((navLink: any, index: string) =>
+            navLink?.type === 'group' ? (
+              navLink?.children?.map((link: any, index: number) => (
+                <Link
+                  key={index}
+                  className='flex py-1.5 text-sm font-medium text-base-content/80 hover:text-base-content'
+                  onClick={() => setMobileNavOpen(!mobileNavOpen)}
+                  href={link?.href || ''}
+                  target={link.newTab ? '_blank' : '_blank'}>
+                  {link?.label}
+                </Link>
+              ))
+            ) : (
+              <Link
+                key={index}
+                className='flex py-1.5 text-sm font-medium text-base-content/80 hover:text-base-content'
+                onClick={() => setMobileNavOpen(!mobileNavOpen)}
+                href={navLink?.href || ''}
+                target={navLink.newTab ? '_blank' : '_blank'}>
+                {navLink?.label}
+              </Link>
+            ),
+          )}
         </ul>
       </nav>
     </div>

@@ -1,6 +1,7 @@
 import { headers } from 'next/headers'
 
 import Navbar from '@/components/Navbar'
+import { serverClient } from '@/trpc/serverClient'
 import { getCurrentUser } from '@/utils/getCurrentUser'
 
 interface LayoutProps {
@@ -8,6 +9,8 @@ interface LayoutProps {
 }
 
 const AccountLayout: React.FC<LayoutProps> = async ({ children }) => {
+  const metadata = await serverClient.siteSettings.getSiteSettings()
+
   const headersList = await headers()
   const user = await getCurrentUser(headersList)
 
@@ -15,7 +18,7 @@ const AccountLayout: React.FC<LayoutProps> = async ({ children }) => {
 
   return (
     <div className='flex min-h-screen flex-col'>
-      <Navbar user={user} />
+      <Navbar metadata={metadata} user={user} />
       <div className='flex-grow'>{children}</div>
       {/* Footer */}
     </div>
