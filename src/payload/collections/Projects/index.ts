@@ -49,22 +49,9 @@ export const Projects: CollectionConfig = {
     {
       name: 'template',
       label: 'Template',
-      type: 'select',
+      type: 'text',
       defaultValue: 'GHOST',
-      options: [
-        {
-          label: 'Ghost',
-          value: 'GHOST',
-        },
-        {
-          label: 'Strapi',
-          value: 'STRAPI',
-        },
-        {
-          label: 'WordPress',
-          value: 'WORDPRESS',
-        },
-      ],
+      required: true,
     },
     {
       type: 'join',
