@@ -7,12 +7,13 @@ const urlField: Field = {
 
 export const Media: CollectionConfig = {
   slug: 'media',
-  // access: {
-  //   read: () => true,
-  //   create: isUser,
-  //   update: isAdmin,
-  //   delete: isAdmin,
-  // },
+
+  access: {
+    read: () => true,
+    create: () => true,
+    update: () => true,
+    delete: () => true,
+  },
   // admin: {
   //   group: ADMIN_UPLOADS_GROUP,
   // },
