@@ -13,7 +13,6 @@ import {
 } from '../common/Select'
 import { Textarea } from '../common/Textarea'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { SiteSetting } from '@payload-types'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import slugify from 'slugify'
@@ -33,21 +32,14 @@ import { ProjectSchema, ProjectSchemaType } from './validator'
 
 const CreateNewProject = ({
   className,
-  metadata,
+  templates,
 }: {
   className?: string
-  metadata: SiteSetting
+  templates: string[]
 }) => {
   const [open, setOpen] = useState(false)
   const trpcUtils = trpc.useUtils()
 
-  const { data: siteSettings } = trpc.siteSettings.getSiteSettings.useQuery(
-    undefined,
-    {
-      initialData: metadata,
-    },
-  )
-  const { templates } = siteSettings
   const {
     formState: { errors },
     handleSubmit,

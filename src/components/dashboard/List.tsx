@@ -37,10 +37,12 @@ const List = ({
   projects,
   isLoading,
   isProjectsEmpty,
+  templates,
 }: {
   projects: Project[]
   isLoading: boolean
   isProjectsEmpty: boolean
+  templates: string[]
 }) => {
   return (
     <div>
@@ -51,7 +53,7 @@ const List = ({
           <Skeleton className='h-48 w-full' />
         </div>
       ) : isProjectsEmpty ? (
-        <EmptyProjects />
+        <EmptyProjects templates={templates as string[]} />
       ) : (
         <div className='z-10 grid grid-cols-1 items-center gap-4 md:grid-cols-2 lg:grid-cols-3'>
           {projects?.map((site, index) => <ListItem key={index} site={site} />)}

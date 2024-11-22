@@ -16,6 +16,14 @@ const DashboardView = ({ metadata }: { metadata: SiteSetting }) => {
     threshold: 1,
   })
 
+  const { data: siteSettings } = trpc.siteSettings.getSiteSettings.useQuery(
+    undefined,
+    {
+      initialData: metadata,
+    },
+  )
+  const { templates } = siteSettings
+
   const {
     data: projects,
     fetchNextPage,
@@ -50,12 +58,13 @@ const DashboardView = ({ metadata }: { metadata: SiteSetting }) => {
       <div className='relative space-y-4 px-2'>
         <div className='flex items-center justify-between'>
           <h2 className='text-left text-2xl font-bold'>Your blog sites</h2>
-          <CreateNewProject metadata={metadata} />
+          <CreateNewProject templates={templates as string[]} />
         </div>
         <List
           projects={allProjects as Project[]}
           isLoading={isLoading}
           isProjectsEmpty={isProjectsEmpty}
+          templates={templates as string[]}
         />
         <div className='mt-4 w-full' ref={ref}>
           {isFetchingNextPage && (
