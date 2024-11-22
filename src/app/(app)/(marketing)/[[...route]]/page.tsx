@@ -4,6 +4,7 @@ import { getPayloadHMR } from '@payloadcms/next/utilities'
 import type { NextPage } from 'next'
 import { notFound } from 'next/navigation'
 
+import Welcome from '@/components/Welcome'
 import RenderBlocks from '@/payload/blocks/RenderBlocks'
 import { serverClient } from '@/trpc/serverClient'
 
@@ -30,6 +31,9 @@ const Page: NextPage<PageProps> = async ({ params }) => {
       />
     )
   } catch (error: any) {
+    if (error?.message === 'Pages not found') {
+      return <Welcome />
+    }
     console.error('Error: Page not found')
     notFound()
   }
