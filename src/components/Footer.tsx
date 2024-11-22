@@ -19,7 +19,6 @@ function Footer({ metadata }: { metadata: SiteSetting }) {
   const formattedFooterLinks = footerLinks?.length
     ? generateMenuLinks(footerLinks)
     : []
-  console.log('Formated footer', formattedFooterLinks)
 
   if (Object.keys(logo).length && logo?.imageUrl === 'string') {
     logoDetails = {
@@ -37,6 +36,9 @@ function Footer({ metadata }: { metadata: SiteSetting }) {
     }
   }
 
+  if (!logoDetails.url && formattedFooterLinks?.length === 0) {
+    return null
+  }
   return (
     <div className=' mt-20 bg-base-200'>
       <Container className='pb-2'>
