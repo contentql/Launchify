@@ -16,7 +16,7 @@ const Welcome = () => {
     runSeedMutation()
   }
   return (
-    <div className='flex min-h-screen w-full items-center justify-center'>
+    <div className='flex w-full items-center justify-center'>
       <div className='empty-project-card relative flex max-w-lg flex-col gap-y-4 rounded-md  bg-base-200 p-4 text-center'>
         <h2 className='font-semibold text-base-content sm:text-5xl md:text-3xl'>
           Welcome to Launchify: Deploy with Ease.
