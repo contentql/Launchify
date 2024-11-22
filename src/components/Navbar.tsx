@@ -119,7 +119,7 @@ const Navbar = ({ user, metadata }: { user: User; metadata: SiteSetting }) => {
                           <DropdownMenuGroup>
                             <DropdownMenuContent>
                               {navLink?.children?.map((subLink, index) => (
-                                <DropdownMenuItem>
+                                <DropdownMenuItem key={index}>
                                   <Link
                                     className='mx-4 text-sm font-medium text-base-content/80 transition duration-150 ease-in-out hover:text-base-content lg:mx-5'
                                     href={subLink?.href || ''}
