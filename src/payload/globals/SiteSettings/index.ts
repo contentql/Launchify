@@ -1,4 +1,3 @@
-import { revalidateTag } from 'next/cache.js'
 import { GlobalConfig } from 'payload'
 import { z } from 'zod'
 
@@ -262,17 +261,7 @@ export const siteSettings: GlobalConfig = {
     read: () => true,
     // update: isAdmin,
   },
-  hooks: {
-    afterChange: [
-      async () => {
-        try {
-          revalidateTag('site-settings')
-        } catch (error) {
-          console.log('Failed to revalidate tag', error)
-        }
-      },
-    ],
-  },
+
   admin: {
     group: 'Content',
   },
@@ -371,6 +360,32 @@ export const siteSettings: GlobalConfig = {
               fields: [socialLinksField],
             },
             { type: 'text', name: 'copyright', label: 'Copyright' },
+          ],
+        },
+        {
+          label: 'Project Configuration',
+          fields: [
+            {
+              type: 'select',
+              name: 'templates',
+              label: 'Templates',
+              hasMany: true,
+              defaultValue: 'GHOST',
+              options: [
+                {
+                  label: 'Ghost',
+                  value: 'GHOST',
+                },
+                {
+                  label: 'Strapi',
+                  value: 'STRAPI',
+                },
+                {
+                  label: 'WordPress',
+                  value: 'WORDPRESS',
+                },
+              ],
+            },
           ],
         },
       ],
