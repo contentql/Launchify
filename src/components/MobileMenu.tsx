@@ -80,6 +80,7 @@ export default function MobileMenu({ navLinks }: { navLinks: any }) {
             navLink?.type === 'group' ? (
               navLink?.children?.map((link: any, index: number) => (
                 <Link
+                  key={index}
                   className='flex py-1.5 text-sm font-medium text-base-content/80 hover:text-base-content'
                   onClick={() => setMobileNavOpen(!mobileNavOpen)}
                   href={link?.href || ''}
@@ -89,6 +90,7 @@ export default function MobileMenu({ navLinks }: { navLinks: any }) {
               ))
             ) : (
               <Link
+                key={index}
                 className='flex py-1.5 text-sm font-medium text-base-content/80 hover:text-base-content'
                 onClick={() => setMobileNavOpen(!mobileNavOpen)}
                 href={navLink?.href || ''}

@@ -25,6 +25,10 @@ const Navbar = ({ user, metadata }: { user: User; metadata: SiteSetting }) => {
   const [hidden, setHidden] = useState(false)
   const { scrollY } = useScroll()
 
+  const pathName = usePathname()
+  let paths = pathName.split('/')
+  let isExists = paths.includes('dashboard')
+
   const { navbar, footer } = metadata
   const { logo, menuLinks } = navbar
 
@@ -57,10 +61,6 @@ const Navbar = ({ user, metadata }: { user: User; metadata: SiteSetting }) => {
   if (!logoDetails.url && navLinks?.length === 0) {
     return null
   }
-
-  const pathName = usePathname()
-  let paths = pathName.split('/')
-  let isExists = paths.includes('dashboard')
 
   useMotionValueEvent(scrollY, 'change', latest => {
     const prev = scrollY?.getPrevious()
