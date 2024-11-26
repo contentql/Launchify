@@ -55,7 +55,7 @@ const DashboardView = ({ metadata }: { metadata: SiteSetting }) => {
 
   return (
     <Container>
-      <div className='relative space-y-4 px-2'>
+      <div className='relative space-y-4 px-2 pb-8 pt-24'>
         <div className='flex items-center justify-between'>
           <h2 className='text-left text-2xl font-bold'>Your blog sites</h2>
           <CreateNewProject templates={templates as string[]} />
