@@ -29,6 +29,7 @@ function Services({
   isServicesLoading: boolean
 }) {
   const [dragging, setIsDragging] = useState(false)
+
   const deploymentStatus = {
     DEPLOYING: (
       <span title='Deploying' className='text-info'>
@@ -82,6 +83,7 @@ function Services({
             )}>
             <Link
               key={index}
+              className='flex h-full w-full flex-col justify-between'
               href={`/dashboard/project/${(service?.project as Project)?.id}/service/${service?.id}`}>
               <div className='space-y-0'>
                 <div className='inline-flex items-center gap-x-2'>
