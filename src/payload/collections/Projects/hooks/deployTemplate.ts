@@ -1,3 +1,4 @@
+import { env } from '@env'
 import { Media, Template } from '@payload-types'
 import { CollectionBeforeChangeHook } from 'payload'
 
@@ -12,6 +13,7 @@ import {
   createServiceDomain,
   createTcpProxy,
   createVolume,
+  createWebhook,
   serviceInstanceUpdate,
 } from '@/railway'
 
@@ -36,6 +38,11 @@ export const deployTemplate: CollectionBeforeChangeHook = async ({
 
       data.projectId = emptyProject.id
       data.environmentId = emptyProject.environments.edges.at(0).node.id
+
+      await createWebhook({
+        projectId: data.projectId,
+        url: `${env.PAYLOAD_URL}/api/webhook/railway`,
+      })
 
       const template = await payload.findByID({
         collection: 'templates',
