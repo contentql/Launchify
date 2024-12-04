@@ -386,6 +386,12 @@ export const siteSettings: GlobalConfig = {
                 },
               ],
             },
+            {
+              name: 'Projects',
+              type: 'relationship',
+              relationTo: ['templates'],
+              hasMany: true,
+            },
           ],
         },
       ],

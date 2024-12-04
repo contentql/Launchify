@@ -26,7 +26,7 @@ export const projectRouter = router({
           user,
           limit,
           page: cursor,
-          depth: 0,
+          depth: 10,
           sort: '-createdAt',
           where: {
             and: [
