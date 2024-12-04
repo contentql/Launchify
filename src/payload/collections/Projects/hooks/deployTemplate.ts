@@ -67,7 +67,7 @@ export const deployTemplate: CollectionBeforeChangeHook = async ({
             const mariadb = await createMariaDBDatabase({
               environmentId: data.environmentId,
               projectId: data.projectId,
-              icon: '',
+              icon: (service?.icon as Media)?.url || '',
               name: service.name!,
             })
             return mariadb
@@ -75,7 +75,7 @@ export const deployTemplate: CollectionBeforeChangeHook = async ({
             const postgreSQL = await createPostgreSQLDatabase({
               environmentId: data.environmentId,
               projectId: data.projectId,
-              icon: '',
+              icon: (service?.icon as Media)?.url || '',
               name: service.name!,
               variables: { PGDATA: `/var/lib/${service.type}/${service.name}` },
             })
@@ -106,7 +106,7 @@ export const deployTemplate: CollectionBeforeChangeHook = async ({
             const mongodb = await createMongoDBDatabase({
               environmentId: data.environmentId,
               projectId: data.projectId,
-              icon: '',
+              icon: (service?.icon as Media)?.url || '',
               name: service.name!,
             })
             return mongodb
@@ -114,7 +114,7 @@ export const deployTemplate: CollectionBeforeChangeHook = async ({
             const redis = await createRedisDatabase({
               environmentId: data.environmentId,
               projectId: data.projectId,
-              icon: '',
+              icon: (service?.icon as Media)?.url || '',
               name: service.name!,
             })
             return redis
