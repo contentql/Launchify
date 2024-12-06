@@ -12,11 +12,10 @@ import {
 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { useEffect } from 'react'
 
 import { cn } from '@/utils/cn'
 
-const NodesTesting = ({
+const ReactNodes = ({
   children,
   services,
   slug,
@@ -38,36 +37,21 @@ const NodesTesting = ({
   // )
   const initialNodes = services?.map((service, index) => ({
     id: service.id,
-    position: { x: 100 * (index + 1), y: 100 },
+    position: { x: 350 * (index + 1), y: 250 },
     data: { ...service },
     type: 'custom',
   }))
+  const updatedNodes = initialNodes?.map(node =>
+    node.id === slug.at(-1)
+      ? {
+          ...node,
+          position: { x: 50, y: 250 },
+        }
+      : node,
+  )
+  console.log('services', updatedNodes)
 
-  console.log('services', initialNodes)
-
-  const [nodes, setNodes] = useNodesState(initialNodes!)
-  //   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges)
-
-  //   const onConnect = useCallback(
-  //     (connection: Connection) => {
-  //       const edge = { ...connection, animate: true }
-  //       setEdges(prev => addEdge(edge, prev))
-  //     },
-  //     [setEdges],
-  //   )
-
-  useEffect(() => {
-    const storedNodes = localStorage.getItem('nodes')
-    if (storedNodes) {
-      setNodes(JSON.parse(storedNodes))
-    }
-  }, [])
-
-  const onNodesChange = (nodes: any) => {
-    setNodes(nodes)
-    localStorage.setItem('nodes', JSON.stringify(nodes))
-  }
-
+  const [nodes, setNodes, onNodesChange] = useNodesState(updatedNodes!)
   const deploymentStatus = {
     DEPLOYING: (
       <span title='Deploying' className='text-info'>
@@ -161,4 +145,4 @@ const NodesTesting = ({
   )
 }
 
-export default NodesTesting
+export default ReactNodes
