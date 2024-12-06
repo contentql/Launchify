@@ -557,13 +557,7 @@ export interface SiteSetting {
       | null;
     copyright?: string | null;
   };
-  templates?: ('GHOST' | 'STRAPI' | 'WORDPRESS')[] | null;
-  Projects?:
-    | {
-        relationTo: 'templates';
-        value: string | Template;
-      }[]
-    | null;
+  Projects: (string | Template)[];
   updatedAt?: string | null;
   createdAt?: string | null;
 }
