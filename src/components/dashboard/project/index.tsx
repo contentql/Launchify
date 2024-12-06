@@ -30,7 +30,6 @@ import { trpc } from '@/trpc/client'
 import { cn } from '@/utils/cn'
 
 import Details from './Details'
-import Services from './Services'
 import Variables from './Variables'
 import { EditServiceSchemaType, EditServiceScheme } from './validator'
 
@@ -95,13 +94,13 @@ const ProjectDetailsView = ({ slug }: { slug: any }) => {
 
   return (
     <Container className='relative'>
-      <Services
+      {/* <Services
         open={open}
         services={data?.services as Service[]}
         setOpen={setOpen}
         slug={slug}
         isServicesLoading={isServicesLoading}
-      />
+      /> */}
       {open && (
         <div
           className={cn(
