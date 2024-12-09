@@ -148,3 +148,19 @@ export const ServiceInstanceUpdateSchema = z.object({
 export type ServiceInstanceUpdateType = z.infer<
   typeof ServiceInstanceUpdateSchema
 >
+
+export const GithubDeploySchema = z.object({
+  projectId: z.string(),
+  repo: z.string(),
+  branch: z.string().optional().nullable(),
+})
+export type GithubDeployType = z.infer<typeof GithubDeploySchema>
+
+export const UpdateServiceSchema = z.object({
+  id: z.string(),
+  input: z.object({
+    name: z.string().optional().nullable(),
+    icon: z.string().optional().nullable(),
+  }),
+})
+export type UpdateServiceType = z.infer<typeof UpdateServiceSchema>
