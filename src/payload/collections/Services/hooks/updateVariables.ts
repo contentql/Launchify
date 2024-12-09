@@ -41,7 +41,8 @@ export const updateVariables: CollectionBeforeChangeHook = async ({
           const { projectId, serviceId, environmentId } = originalDoc
 
           if (added.length > 0 || edited.length > 0) {
-            const combinedVariables = updatedVariables?.reduce(
+            const addedOrEditedVariables = [...added, ...edited]
+            const combinedVariables = addedOrEditedVariables?.reduce(
               (
                 acc: Record<string, string>,
                 curr: { key?: string | null; value?: string | null },
