@@ -1,4 +1,5 @@
 // import DashBoardNavbar from '@/components/dashboard/DashBoardNavbar'
+import { ReactFlowProvider } from '@xyflow/react'
 import { headers } from 'next/headers'
 
 import Navbar from '@/components/Navbar'
@@ -13,9 +14,11 @@ const DashboardLayout = async ({ children }: { children: React.ReactNode }) => {
   return (
     <div>
       <Navbar metadata={metadata} user={user} />
-      <div className='mx-auto grid min-h-screen w-full grid-rows-[1fr_auto] text-base-content'>
-        <div>{children}</div>
-      </div>
+      <ReactFlowProvider>
+        <div className='mx-auto grid min-h-screen w-full grid-rows-[1fr_auto] text-base-content'>
+          <div>{children}</div>
+        </div>
+      </ReactFlowProvider>
     </div>
   )
 }
