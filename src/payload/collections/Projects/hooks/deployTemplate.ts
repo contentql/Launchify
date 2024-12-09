@@ -1,4 +1,3 @@
-import { env } from '@env'
 import { Media, Template } from '@payload-types'
 import { CollectionBeforeChangeHook } from 'payload'
 
@@ -14,9 +13,12 @@ import {
   createServiceDomain,
   createTcpProxy,
   createVolume,
-  createWebhook,
   deleteProject,
+  getProjectDetails,
+  githubRepoDeploy,
   serviceInstanceUpdate,
+  updateServiceDetails,
+  upsertVariables,
 } from '@/railway'
 
 export const deployTemplate: CollectionBeforeChangeHook = async ({
@@ -66,10 +68,10 @@ export const deployTemplate: CollectionBeforeChangeHook = async ({
           message: 'Creating webhook...',
         }),
       )
-      await createWebhook({
-        projectId: data.projectId,
-        url: `${env.PAYLOAD_URL}/api/webhook/railway`,
-      })
+      // await createWebhook({
+      //   projectId: data.projectId,
+      //   url: `${env.PAYLOAD_URL}/api/webhook/railway`,
+      // })
       sendMessageToClient(
         clientId,
         JSON.stringify({
@@ -164,6 +166,18 @@ export const deployTemplate: CollectionBeforeChangeHook = async ({
               name: service.name!,
               variables: { PGDATA: `/var/lib/${service.type}/${service.name}` },
             })
+            await serviceInstanceUpdate({
+              environmentId: data.environmentId,
+              input: {
+                startCommand: `/bin/sh -c "unset PGPORT; docker-entrypoint.sh postgres --port=5432"`,
+              },
+              serviceId: postgreSQL?.id,
+            })
+            await createTcpProxy({
+              applicationPort: 5432,
+              environmentId: data.environmentId,
+              serviceId: postgreSQL?.id,
+            })
             return postgreSQL
           case 'MYSQL':
             const mysql = await createMySQLDatabase({
@@ -236,6 +250,87 @@ export const deployTemplate: CollectionBeforeChangeHook = async ({
         return dockerService
       }
 
+      //Handle github service creation
+      async function handleGithubService(service: any, data: any) {
+        const github = await githubRepoDeploy({
+          projectId: data.projectId,
+          repo: service.repo,
+          branch: null,
+          // icon: (service?.icon as Media)?.url || '',
+          // name: service.name!,
+          // source: { image: service.image! },
+          // variables: Object.fromEntries(
+          //   Object.entries(service.environmentVariables || {}).map(
+          //     ([key, value]) => [key, String(value)],
+          //   ),
+          // ),
+        })
+
+        const services = await getProjectDetails({
+          projectId: data.projectId,
+        })
+        const getLatestService = (projectData: any) => {
+          if (
+            !projectData?.services?.edges ||
+            !Array.isArray(projectData.services.edges) ||
+            projectData.services.edges.length === 0
+          ) {
+            console.error('No services found or invalid structure.')
+            return null
+          }
+
+          const latestService = projectData.services.edges.reduce(
+            (
+              latest: { node: { createdAt: string | number | Date } },
+              current: { node: { createdAt: string | number | Date } },
+            ) => {
+              const latestCreatedAt = new Date(latest.node.createdAt).getTime()
+              const currentCreatedAt = new Date(
+                current.node.createdAt,
+              ).getTime()
+              return currentCreatedAt > latestCreatedAt ? current : latest
+            },
+          )
+
+          return latestService.node
+        }
+        const githubService = getLatestService(services)
+
+        const serviceDomain = await createServiceDomain({
+          environmentId: data.environmentId,
+          serviceId: githubService?.id,
+        })
+
+        if (service.addStartCommand) {
+          await serviceInstanceUpdate({
+            environmentId: data.environmentId,
+            input: { startCommand: service.startCommand! },
+            serviceId: githubService.id,
+          })
+        }
+
+        await upsertVariables({
+          projectId: data.projectId,
+          serviceId: githubService.id,
+          environmentId: data.environmentId,
+          variables: Object.fromEntries(
+            Object.entries(service.environmentVariables || {}).map(
+              ([key, value]) => [key, String(value)],
+            ),
+          ),
+        })
+
+        const updatedService = await updateServiceDetails({
+          id: githubService?.id,
+          input: {
+            icon: (service?.icon as Media)?.url || '',
+            name: service.name!,
+          },
+        })
+
+        return githubService
+      }
+
       // Main logic for iterating over services
       async function deployServices(template: Template, data: any) {
         if (!template?.services?.length) return
@@ -256,6 +351,8 @@ export const deployTemplate: CollectionBeforeChangeHook = async ({
             serviceDetails = await handleDatabaseService(service, data)
           } else if (service.type === 'docker') {
             serviceDetails = await handleDockerService(service, data)
+          } else if (service.type === 'github') {
+            serviceDetails = await handleGithubService(service, data)
           }
           // Create volume after successful deployment
           await createVolume({

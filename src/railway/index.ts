@@ -10,9 +10,11 @@ import { DELETE_PROJECT } from './queries/project/deleteProject'
 import { CREATE_TCP_PROXY } from './queries/proxy/createTcpProxy'
 import { CREATE_SERVICE } from './queries/service/createService'
 import { CREATE_SERVICE_DOMAIN } from './queries/service/createServiceDomain'
+import { GITHUB_REPO_DEPLOY } from './queries/service/githubRepoDeploy'
 import { REDEPLOY_SERVICE } from './queries/service/redeployService'
 import { SERVICE_INSTANCE_DEPLOY } from './queries/service/serviceInstanceDeploy'
 import { SERVICE_INSTANCE_UPDATE } from './queries/service/serviceInstanceUpdate'
+import { UPDATE_SERVICE } from './queries/service/updateService'
 import { getQueryVariables } from './queries/template/queryVariables'
 import { TEMPLATE_DEPLOY } from './queries/template/templateDeploy'
 import { DELETE_VARIABLE } from './queries/variables/deleteVariable'
@@ -32,10 +34,12 @@ import {
   DeleteCustomDomainType,
   DeleteProjectType,
   DeleteVariableType,
+  GithubDeployType,
   RedeployServiceType,
   ServiceInstanceDeployType,
   ServiceInstanceUpdateType,
   TemplateDeployType,
+  UpdateServiceType,
   UpsertVariablesType,
   getServiceDomainsSchemaType,
   getVariablesSchemaType,
@@ -401,7 +405,7 @@ export const createPostgreSQLDatabase = async (input: CreateDatabaseType) => {
     input: {
       ...input,
       source: {
-        image: 'postgres:14-alpine',
+        image: 'ghcr.io/railwayapp-templates/postgres-ssl:16',
       },
       variables: {
         ...input.variables,
@@ -598,5 +602,47 @@ export const serviceInstanceUpdate = async (
     return response.data
   } catch (error: any) {
     throw new Error('Error during service instance update : ', error)
+  }
+}
+
+export const githubRepoDeploy = async (input: GithubDeployType) => {
+  const queryVariables = {
+    input,
+  }
+  try {
+    const response = await railwayAPI({
+      query: GITHUB_REPO_DEPLOY,
+      variables: queryVariables,
+    })
+
+    return response.data.githubRepoDeploy
+  } catch (error: any) {
+    const errorMsg = `github repository deploy error: ${error.message || error}`
+
+    console.error(errorMsg)
+    throw new Error(errorMsg)
+  }
+}
+
+export const updateServiceDetails = async (data: UpdateServiceType) => {
+  const { id, input } = data
+
+  const queryVariables = {
+    id,
+    input,
+  }
+
+  try {
+    const response = await railwayAPI({
+      query: UPDATE_SERVICE,
+      variables: queryVariables,
+    })
+
+    return response.data.serviceUpdate
+  } catch (error: any) {
+    const errorMsg = `update service error: ${error.message || error}`
+
+    console.error(errorMsg)
+    throw new Error(errorMsg)
   }
 }
