@@ -49,8 +49,6 @@ const ReactNodes = ({
         }
       : node,
   )
-  console.log('services', updatedNodes)
-
   const [nodes, setNodes, onNodesChange] = useNodesState(updatedNodes!)
   const deploymentStatus = {
     DEPLOYING: (

@@ -51,9 +51,6 @@ const CreateNewProject = ({
   const [deploymentSteps, setDeploymentSteps] = useState<
     { status: StatusType['status']; step: string; message: string }[]
   >([])
-
-  console.log('deployment status', deploymentSteps)
-
   const startSSE = ({ clientId }: { clientId: string }) => {
     const eventSource = new EventSource(`/api/sse/${clientId}`)
 
@@ -135,7 +132,6 @@ const CreateNewProject = ({
     isError: isProjectCreationError,
   } = trpc.project?.createProject.useMutation({
     onSuccess: data => {
-      console.log('Project Created data', data)
       toast?.success(`Project created successfully`)
       trpcUtils.project.getProjects.invalidate()
       setOpen(false)
@@ -150,8 +146,6 @@ const CreateNewProject = ({
   const onsubmit = (data: ProjectSchemaType) => {
     const clientId = `${user?.id}-${uuidv4()}`
     const stopSSE = startSSE({ clientId })
-
-    console.log('clientId', clientId, data)
 
     setLoading(true)
 
@@ -171,7 +165,6 @@ const CreateNewProject = ({
       },
     )
   }
-  console.log('Templates', templates)
   return (
     <>
       <Button className={cn(className)} onClick={() => setOpen(true)}>
