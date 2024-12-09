@@ -1,5 +1,7 @@
 'use client'
 
+import { MultiStepLoader as Loader } from '../../components/MultiStepLoader'
+import { StatusType } from '../MultiStepLoader'
 import Button from '../common/Button'
 import Input from '../common/Input'
 import {
@@ -13,10 +15,12 @@ import {
 } from '../common/Select'
 import { Textarea } from '../common/Textarea'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { Template } from '@payload-types'
 import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import slugify from 'slugify'
 import { toast } from 'sonner'
+import { v4 as uuidv4 } from 'uuid'
 
 import {
   Dialog,
@@ -25,6 +29,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/common/Dialog'
+import { removeClient } from '@/lib/clients'
 import { trpc } from '@/trpc/client'
 import { cn } from '@/utils/cn'
 
@@ -35,10 +40,63 @@ const CreateNewProject = ({
   templates,
 }: {
   className?: string
-  templates: string[]
+  templates: Template[]
 }) => {
   const [open, setOpen] = useState(false)
   const trpcUtils = trpc.useUtils()
+  const [loading, setLoading] = useState(false)
+
+  const { data: user } = trpc.user.getUser.useQuery()
+
+  const [deploymentSteps, setDeploymentSteps] = useState<
+    { status: StatusType['status']; step: string; message: string }[]
+  >([])
+  const startSSE = ({ clientId }: { clientId: string }) => {
+    const eventSource = new EventSource(`/api/sse/${clientId}`)
+
+    // Handle incoming SSE messages
+    eventSource.onmessage = event => {
+      const data = event.data && JSON.parse(event?.data)
+
+      if (data?.process === 'CREATE_PROJECT') {
+        setDeploymentSteps(prevSteps => {
+          const existingStepIndex = prevSteps.findIndex(
+            step => step.step === data.step,
+          )
+
+          if (existingStepIndex > -1) {
+            // Update existing step
+            const updatedSteps = [...prevSteps]
+            updatedSteps[existingStepIndex] = {
+              status: data.status,
+              step: data.step,
+              message: data.message,
+            }
+            return updatedSteps
+          } else {
+            // Add new step
+            return [
+              ...prevSteps,
+              {
+                status: data.status,
+                step: data.step,
+                message: data.message,
+              },
+            ]
+          }
+        })
+      }
+    }
+
+    // Handle SSE errors
+    eventSource.onerror = () => {
+      eventSource.close()
+    }
+
+    return () => {
+      eventSource.close()
+    }
+  }
 
   const {
     formState: { errors },
@@ -74,7 +132,6 @@ const CreateNewProject = ({
     isError: isProjectCreationError,
   } = trpc.project?.createProject.useMutation({
     onSuccess: data => {
-      console.log('Project Created data', data)
       toast?.success(`Project created successfully`)
       trpcUtils.project.getProjects.invalidate()
       setOpen(false)
@@ -87,13 +144,27 @@ const CreateNewProject = ({
     },
   })
   const onsubmit = (data: ProjectSchemaType) => {
-    createProject({
-      description: data?.description,
-      name: data?.name,
-      template: data?.template,
-    })
+    const clientId = `${user?.id}-${uuidv4()}`
+    const stopSSE = startSSE({ clientId })
+
+    setLoading(true)
+
+    createProject(
+      {
+        description: data?.description,
+        name: data?.name,
+        template: data?.template,
+        clientId,
+      },
+      {
+        onSettled: () => {
+          stopSSE()
+          setLoading(false)
+          removeClient(clientId)
+        },
+      },
+    )
   }
-  console.log('Templates', templates)
   return (
     <>
       <Button className={cn(className)} onClick={() => setOpen(true)}>
@@ -162,10 +233,12 @@ const CreateNewProject = ({
                 <Controller
                   name='template'
                   control={control}
+                  defaultValue={templates?.[0]?.id || ''}
                   render={({ field }) => (
                     <Select
                       onValueChange={field.onChange}
-                      defaultValue={field.value}>
+                      defaultValue={field.value}
+                      disabled={templates?.length <= 1}>
                       <SelectTrigger className='mt-2 w-full'>
                         <SelectValue placeholder='Select template' />
                       </SelectTrigger>
@@ -176,8 +249,8 @@ const CreateNewProject = ({
                             <SelectItem
                               className='capitalize'
                               key={index}
-                              value={template}>
-                              <p className='capitalize'>{template}</p>
+                              value={template?.id}>
+                              <p className='capitalize'>{template?.title}</p>
                             </SelectItem>
                           ))}
                         </SelectGroup>
@@ -200,6 +273,11 @@ const CreateNewProject = ({
           </form>
         </DialogContent>
       </Dialog>
+      <Loader
+        loadingStates={deploymentSteps as any}
+        loading={loading}
+        duration={2000}
+      />
     </>
   )
 }
