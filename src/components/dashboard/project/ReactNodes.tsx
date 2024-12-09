@@ -1,7 +1,13 @@
 'use client'
 
 import { Project, Service } from '@payload-types'
-import { Background, Controls, ReactFlow, useNodesState } from '@xyflow/react'
+import {
+  Background,
+  Controls,
+  ReactFlow,
+  ReactFlowProvider,
+  useNodesState,
+} from '@xyflow/react'
 import '@xyflow/react/dist/style.css'
 import {
   Ban,
@@ -12,8 +18,46 @@ import {
 } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import React from 'react'
 
 import { cn } from '@/utils/cn'
+import { formateDateByDays } from '@/utils/daysAgo'
+
+const calculateNodePositions = (
+  services: Service[],
+  containerWidth: number,
+  containerHeight: number,
+) => {
+  const nodeWidth = 150 // Node width
+  const nodeHeight = 100 // Node height
+  const marginX = 150 // Horizontal margin between nodes
+  const marginY = 100 // Vertical margin between nodes
+
+  // Max nodes per row
+  const rowCapacity = Math.ceil(Math.sqrt(services.length))
+  // Total rows needed
+  const totalRows = Math.ceil(services.length / rowCapacity)
+
+  // Total grid dimensions
+  const totalGridWidth = rowCapacity * nodeWidth + (rowCapacity - 1) * marginX
+  const totalGridHeight = totalRows * nodeHeight + (totalRows - 1) * marginY
+
+  // Center grid inside the container
+  const startX = (containerWidth - totalGridWidth) / 2
+  const startY = (containerHeight - totalGridHeight) / 2
+
+  const positions = services.map((_, index) => {
+    const row = Math.floor(index / rowCapacity)
+    const col = index % rowCapacity
+
+    const x = startX + col * (nodeWidth + marginX)
+    const y = startY + row * (nodeHeight + marginY)
+
+    return { x, y }
+  })
+
+  return positions
+}
 
 const ReactNodes = ({
   children,
@@ -24,32 +68,34 @@ const ReactNodes = ({
   services: Service[]
   slug: any
 }) => {
-  // const {
-  //   data,
-  //   isLoading: isServicesLoading,
-  //   isFetching,
-  //   refetch,
-  // } = trpc.service.getServicesByProjectId.useQuery(
-  //   {
-  //     id: slug?.at(0),
-  //   },
-  //   { initialData: services },
-  // )
+  const containerWidth = typeof window !== 'undefined' ? window.innerWidth : 800
+  const containerHeight =
+    typeof window !== 'undefined' ? window.innerHeight : 600
+
+  const initialPositions = calculateNodePositions(
+    services,
+    containerWidth,
+    containerHeight,
+  )
+
   const initialNodes = services?.map((service, index) => ({
     id: service.id,
-    position: { x: 350 * (index + 1), y: 250 },
+    position: initialPositions[index],
     data: { ...service },
     type: 'custom',
   }))
+
   const updatedNodes = initialNodes?.map(node =>
     node.id === slug.at(-1)
       ? {
           ...node,
-          position: { x: 50, y: 250 },
+          position: { x: 50, y: 250 }, // Keep the highlighted node in a specific position
         }
       : node,
   )
+
   const [nodes, setNodes, onNodesChange] = useNodesState(updatedNodes!)
+
   const deploymentStatus = {
     DEPLOYING: (
       <span title='Deploying' className='text-info'>
@@ -92,7 +138,7 @@ const ReactNodes = ({
               ) : (
                 <Box className='text-base-content/80' size={20} />
               )}
-              <h4 className='line-clamp-1  text-lg font-bold capitalize text-base-content'>
+              <h4 className='line-clamp-1 text-lg font-bold capitalize text-base-content'>
                 {data?.serviceName}
               </h4>
             </div>
@@ -102,14 +148,16 @@ const ReactNodes = ({
               </p>
             )}
           </div>
-          {/* <div className='inline-flex items-center gap-x-2'>
-            {deploymentStatus[service?.deploymentStatus!]}
+          <div className='inline-flex items-center gap-x-2'>
+            {data?.deploymentStatus &&
+              //@ts-ignore
+              deploymentStatus[data?.deploymentStatus!]}
             <p className='text-sm text-base-content/80'>
-              {service?.updatedAt
-                ? formateDateByDays(service?.updatedAt)
-                : formateDateByDays(service?.createdAt)}
+              {data?.updatedAt
+                ? formateDateByDays(data?.updatedAt)
+                : formateDateByDays(data?.createdAt)}
             </p>
-          </div> */}
+          </div>
         </Link>
       </div>
     )
@@ -118,14 +166,13 @@ const ReactNodes = ({
   const nodeTypes = {
     custom: TestComponent,
   }
+
   return (
-    <div>
+    <ReactFlowProvider>
       <div style={{ width: '100vw', height: '100vh' }}>
         <ReactFlow
           nodes={nodes}
           onNodesChange={onNodesChange}
-          //   onEdgesChange={onEdgesChange}
-          //   onConnect={onConnect}
           nodeTypes={nodeTypes}
           className='z-10'>
           <div>{children}</div>
@@ -139,7 +186,7 @@ const ReactNodes = ({
           />
         </ReactFlow>
       </div>
-    </div>
+    </ReactFlowProvider>
   )
 }
 
