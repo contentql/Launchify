@@ -20,7 +20,7 @@ interface UserEmailTemplateProps {
   actionLabel: string
   userName: string
   projectName: string
-  logo: string
+  logo?: string
 }
 
 export const CreateProjectTemplate = ({
