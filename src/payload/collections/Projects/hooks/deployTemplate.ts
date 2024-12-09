@@ -15,6 +15,7 @@ import {
   createTcpProxy,
   createVolume,
   createWebhook,
+  deleteProject,
   serviceInstanceUpdate,
 } from '@/railway'
 
@@ -306,6 +307,33 @@ export const deployTemplate: CollectionBeforeChangeHook = async ({
           message: 'An error occurred during project creation.',
         }),
       )
+
+      sendMessageToClient(
+        clientId,
+        JSON.stringify({
+          process: 'CREATE_PROJECT',
+          status: 'PENDING',
+          step: 'Rolling back due to an error, please try again!',
+          message:
+            'Initiating rollback due to an error during project creation.',
+        }),
+      )
+
+      if (data?.projectId) {
+        await deleteProject({ projectId: data.projectId })
+      }
+
+      sendMessageToClient(
+        clientId,
+        JSON.stringify({
+          process: 'CREATE_PROJECT',
+          status: 'SUCCESS',
+          step: 'Rolling back due to an error, please try again!',
+          message:
+            'Rollback was successful. You can now try creating the project again.',
+        }),
+      )
+
       console.log('Error while deploying template', error)
       throw error
     }
