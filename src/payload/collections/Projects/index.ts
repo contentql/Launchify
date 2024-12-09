@@ -3,7 +3,9 @@ import { User } from '@payload-types'
 import { CollectionConfig } from 'payload'
 
 import { isAdminOrCurrentUser } from './access'
+import { deleteRailwayProject } from './hooks/deleteRailwayProject'
 import { deployTemplate } from './hooks/deployTemplate'
+import { sendEmailAfterProjectCreation } from './hooks/sendEmailAfterProjectCreation'
 import { updateService } from './hooks/updateService'
 
 export const Projects: CollectionConfig = {
@@ -19,8 +21,8 @@ export const Projects: CollectionConfig = {
   },
 
   hooks: {
-    beforeChange: [deployTemplate],
-    afterChange: [updateService],
+    beforeChange: [deployTemplate, deleteRailwayProject],
+    afterChange: [updateService, sendEmailAfterProjectCreation],
     // afterChange: [createService, sendEmailAfterProjectCreation],
   },
 
