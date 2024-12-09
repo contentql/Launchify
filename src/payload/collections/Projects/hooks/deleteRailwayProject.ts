@@ -25,7 +25,6 @@ export const deleteRailwayProject: CollectionBeforeChangeHook = async ({
         collection: 'users',
         id: data?.user.value,
       })
-      console.log('user', user)
       const siteSettings = await payload.findGlobal({
         slug: 'site-settings',
       })

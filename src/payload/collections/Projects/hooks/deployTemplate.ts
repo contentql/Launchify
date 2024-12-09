@@ -295,8 +295,6 @@ export const deployTemplate: CollectionBeforeChangeHook = async ({
 
       // Deploy service
       await deployServices(template, data)
-
-      console.log('docs data', data, originalDoc)
     } catch (error) {
       sendMessageToClient(
         clientId,

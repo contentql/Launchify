@@ -50,7 +50,6 @@ const DashboardView = ({ metadata }: { metadata: SiteSetting }) => {
   }, [inView, hasNextPage, isFetchingNextPage])
 
   const allProjects = projects?.pages?.map(page => page?.projects).flat()
-  console.log('all projects', allProjects)
   const isProjectsEmpty = projects?.pages?.at(0)?.projects?.length === 0
 
   return (

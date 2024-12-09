@@ -91,7 +91,6 @@ const ProjectDetails = ({
     })
 
   const onsubmit = (data: EditServiceSchemaType) => {
-    console.log('data', data)
     updateServiceName({
       id: service?.id,
       serviceName: data.serviceName,
