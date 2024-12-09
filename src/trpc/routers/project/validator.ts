@@ -4,6 +4,7 @@ export const ProjectCreationSchema = z.object({
   name: z.string(),
   description: z.string(),
   template: z.string(),
+  clientId: z.string(),
 })
 
 export const getProjectsSchema = z.object({

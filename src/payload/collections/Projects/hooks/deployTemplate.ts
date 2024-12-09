@@ -2,6 +2,7 @@ import { env } from '@env'
 import { Media, Template } from '@payload-types'
 import { CollectionBeforeChangeHook } from 'payload'
 
+import { sendMessageToClient } from '@/lib/clients'
 import {
   createEmptyProject,
   createMariaDBDatabase,
@@ -26,31 +27,62 @@ export const deployTemplate: CollectionBeforeChangeHook = async ({
   data,
 }) => {
   if (operation === 'create') {
+    const { clientId } = context as { clientId: string }
+    const { payload } = req
     try {
-      const { payload } = req
-
+      sendMessageToClient(
+        clientId,
+        JSON.stringify({
+          process: 'CREATE_PROJECT',
+          status: 'PENDING',
+          step: 'Create empty project',
+          message: 'Creating empty project...',
+        }),
+      )
       const emptyProject = await createEmptyProject({
         projectName: data?.name,
         projectDescription: data?.projectDescription,
       })
-
-      console.log('Empty Project', emptyProject)
-
       data.projectId = emptyProject.id
       data.environmentId = emptyProject.environments.edges.at(0).node.id
 
+      sendMessageToClient(
+        clientId,
+        JSON.stringify({
+          process: 'CREATE_PROJECT',
+          status: 'SUCCESS',
+          step: 'Create empty project',
+          message: 'Empty project created successfully.',
+        }),
+      )
+
+      sendMessageToClient(
+        clientId,
+        JSON.stringify({
+          process: 'CREATE_PROJECT',
+          status: 'PENDING',
+          step: 'Create webhook',
+          message: 'Creating webhook...',
+        }),
+      )
       await createWebhook({
         projectId: data.projectId,
         url: `${env.PAYLOAD_URL}/api/webhook/railway`,
       })
+      sendMessageToClient(
+        clientId,
+        JSON.stringify({
+          process: 'CREATE_PROJECT',
+          status: 'SUCCESS',
+          step: 'Create webhook',
+          message: 'Webhook created successfully.',
+        }),
+      )
 
       const template = await payload.findByID({
         collection: 'templates',
         id: data.project,
       })
-
-      console.log('template', template)
-      console.log('variables', template?.services?.at(1)?.environmentVariables)
 
       // Polling utility to wait for deployment success
       async function waitForDeploymentSuccess(serviceId: string) {
@@ -61,8 +93,53 @@ export const deployTemplate: CollectionBeforeChangeHook = async ({
             id: serviceId,
           })
           status = service?.deploymentStatus || ''
-          if (status === 'Success') break
-          console.log(`Waiting for deployment of service ${serviceId}...`)
+          if (status === 'NOT_YET_DEPLOYED') {
+            sendMessageToClient(
+              clientId,
+              JSON.stringify({
+                process: 'CREATE_PROJECT',
+                status: 'NOT_YET_DEPLOYED',
+                step: 'Deploying',
+                message: `Initializing ${service?.serviceName} deployment... please wait`,
+              }),
+            )
+          }
+          if (status === 'DEPLOYING') {
+            sendMessageToClient(
+              clientId,
+              JSON.stringify({
+                process: 'CREATE_PROJECT',
+                status: 'DEPLOYING',
+                step: 'Deploying',
+                message: `${service?.serviceName} is currently deploying...`,
+              }),
+            )
+          }
+          if (status === 'ERROR') {
+            sendMessageToClient(
+              clientId,
+              JSON.stringify({
+                process: 'CREATE_PROJECT',
+                status: 'ERROR',
+                step: 'Deployment error',
+                message: `${service?.serviceName} deployment failed`,
+              }),
+            )
+            break
+          }
+          if (status === 'SUCCESS') {
+            sendMessageToClient(
+              clientId,
+              JSON.stringify({
+                process: 'CREATE_PROJECT',
+                status: 'SUCCESS',
+                step: 'Deployment success',
+                message: `${service?.serviceName} has been successfully deployed!`,
+              }),
+            )
+            break
+          }
+
           await new Promise(resolve => setTimeout(resolve, 5000)) // Poll every 5 seconds
         } while (status !== 'SUCCESS' && status !== 'ERROR')
       }
@@ -164,14 +241,21 @@ export const deployTemplate: CollectionBeforeChangeHook = async ({
         for (const service of template.services) {
           let serviceDetails
 
+          sendMessageToClient(
+            clientId,
+            JSON.stringify({
+              process: 'CREATE_PROJECT',
+              status: 'PENDING',
+              step: `Create ${service?.name} service  `,
+              message: `Started creating ${service?.name} service`,
+            }),
+          )
+
           if (service.type === 'database') {
             serviceDetails = await handleDatabaseService(service, data)
           } else if (service.type === 'docker') {
             serviceDetails = await handleDockerService(service, data)
           }
-
-          console.log('Service Details of deployed service', serviceDetails)
-
           // Create volume after successful deployment
           await createVolume({
             mountPath: `/var/lib/${service.type}/${service.name}`,
@@ -191,14 +275,20 @@ export const deployTemplate: CollectionBeforeChangeHook = async ({
               project: data?.id,
             },
           })
-
-          console.log('payloadService', payloadService, data)
           // Wait for deployment to complete
           if (serviceDetails) {
             await waitForDeploymentSuccess(payloadService?.id)
           }
 
-          console.log(`Service ${service.name} deployed and volume created.`)
+          sendMessageToClient(
+            clientId,
+            JSON.stringify({
+              process: 'CREATE_PROJECT',
+              status: 'SUCCESS',
+              step: `Create ${service?.name} service`,
+              message: `${service?.name} created successfully`,
+            }),
+          )
         }
       }
 
@@ -207,6 +297,15 @@ export const deployTemplate: CollectionBeforeChangeHook = async ({
 
       console.log('docs data', data, originalDoc)
     } catch (error) {
+      sendMessageToClient(
+        clientId,
+        JSON.stringify({
+          process: 'CREATE_PROJECT',
+          status: 'ERROR',
+          step: 'Error',
+          message: 'An error occurred during project creation.',
+        }),
+      )
       console.log('Error while deploying template', error)
       throw error
     }
