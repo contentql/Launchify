@@ -1,5 +1,7 @@
 'use client'
 
+import { MultiStepLoader as Loader } from '../../components/MultiStepLoader'
+import { StatusType } from '../MultiStepLoader'
 import Button from '../common/Button'
 import Input from '../common/Input'
 import {
@@ -18,6 +20,7 @@ import { useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import slugify from 'slugify'
 import { toast } from 'sonner'
+import { v4 as uuidv4 } from 'uuid'
 
 import {
   Dialog,
@@ -26,6 +29,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/common/Dialog'
+import { removeClient } from '@/lib/clients'
 import { trpc } from '@/trpc/client'
 import { cn } from '@/utils/cn'
 
@@ -40,6 +44,62 @@ const CreateNewProject = ({
 }) => {
   const [open, setOpen] = useState(false)
   const trpcUtils = trpc.useUtils()
+  const [loading, setLoading] = useState(false)
+
+  const { data: user } = trpc.user.getUser.useQuery()
+
+  const [deploymentSteps, setDeploymentSteps] = useState<
+    { status: StatusType['status']; step: string; message: string }[]
+  >([])
+
+  console.log('deployment status', deploymentSteps)
+
+  const startSSE = ({ clientId }: { clientId: string }) => {
+    const eventSource = new EventSource(`/api/sse/${clientId}`)
+
+    // Handle incoming SSE messages
+    eventSource.onmessage = event => {
+      const data = event.data && JSON.parse(event?.data)
+
+      if (data?.process === 'CREATE_PROJECT') {
+        setDeploymentSteps(prevSteps => {
+          const existingStepIndex = prevSteps.findIndex(
+            step => step.step === data.step,
+          )
+
+          if (existingStepIndex > -1) {
+            // Update existing step
+            const updatedSteps = [...prevSteps]
+            updatedSteps[existingStepIndex] = {
+              status: data.status,
+              step: data.step,
+              message: data.message,
+            }
+            return updatedSteps
+          } else {
+            // Add new step
+            return [
+              ...prevSteps,
+              {
+                status: data.status,
+                step: data.step,
+                message: data.message,
+              },
+            ]
+          }
+        })
+      }
+    }
+
+    // Handle SSE errors
+    eventSource.onerror = () => {
+      eventSource.close()
+    }
+
+    return () => {
+      eventSource.close()
+    }
+  }
 
   const {
     formState: { errors },
@@ -88,11 +148,28 @@ const CreateNewProject = ({
     },
   })
   const onsubmit = (data: ProjectSchemaType) => {
-    createProject({
-      description: data?.description,
-      name: data?.name,
-      template: data?.template,
-    })
+    const clientId = `${user?.id}-${uuidv4()}`
+    const stopSSE = startSSE({ clientId })
+
+    console.log('clientId', clientId, data)
+
+    setLoading(true)
+
+    createProject(
+      {
+        description: data?.description,
+        name: data?.name,
+        template: data?.template,
+        clientId,
+      },
+      {
+        onSettled: () => {
+          stopSSE()
+          setLoading(false)
+          removeClient(clientId)
+        },
+      },
+    )
   }
   console.log('Templates', templates)
   return (
@@ -203,6 +280,11 @@ const CreateNewProject = ({
           </form>
         </DialogContent>
       </Dialog>
+      <Loader
+        loadingStates={deploymentSteps as any}
+        loading={loading}
+        duration={2000}
+      />
     </>
   )
 }

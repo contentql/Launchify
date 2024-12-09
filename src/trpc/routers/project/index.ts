@@ -61,7 +61,7 @@ export const projectRouter = router({
   createProject: userProcedure
     ?.input(ProjectCreationSchema)
     ?.mutation(async ({ input, ctx }) => {
-      const { description, name, template } = input
+      const { description, name, template, clientId } = input
       const { user } = ctx
       try {
         const { totalDocs: totalProjects } = await payload.find({
@@ -91,6 +91,9 @@ export const projectRouter = router({
             projectDescription: description,
             project: template,
             user: { relationTo: 'users', value: user?.id },
+          },
+          context: {
+            clientId,
           },
         })
         return projectData
