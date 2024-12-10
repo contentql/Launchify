@@ -181,6 +181,7 @@ const Variables = ({
     updatedVariables({
       id,
       variables,
+      isUpdated: true,
     })
   }
 

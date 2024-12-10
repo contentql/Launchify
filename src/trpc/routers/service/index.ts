@@ -84,6 +84,7 @@ export const serviceRouter = router({
     .input(
       z.object({
         id: z.string(),
+        isUpdated: z.boolean(),
         variables: z.array(
           z.object({
             key: z.string(),
@@ -93,7 +94,7 @@ export const serviceRouter = router({
       }),
     )
     .mutation(async ({ input, ctx }) => {
-      const { id, variables } = input
+      const { id, isUpdated, variables } = input
       try {
         await payload.update({
           collection: 'services',
@@ -104,6 +105,9 @@ export const serviceRouter = router({
           },
           data: {
             variables,
+          },
+          context: {
+            isUpdated,
           },
         })
       } catch (error) {
