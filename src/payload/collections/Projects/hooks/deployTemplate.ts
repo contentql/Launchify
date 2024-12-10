@@ -103,7 +103,7 @@ export const deployTemplate: CollectionBeforeChangeHook = async ({
               clientId,
               JSON.stringify({
                 process: 'CREATE_PROJECT',
-                status: 'NOT_YET_DEPLOYED',
+                status: 'PENDING',
                 step: 'Deploying',
                 message: `Initializing ${service?.serviceName} deployment... please wait`,
               }),

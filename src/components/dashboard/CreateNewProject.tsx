@@ -148,6 +148,7 @@ const CreateNewProject = ({
     const stopSSE = startSSE({ clientId })
 
     setLoading(true)
+    setOpen(false)
 
     createProject(
       {
