@@ -5,6 +5,7 @@ import { FaqsConfig } from './Faqs'
 import { FeatureConfig } from './Feature'
 import { FeaturesConfig } from './Features'
 import { HeroConfig } from './Hero'
+import { InsuranceConfig } from './Insurance'
 import { PricingConfig } from './Pricing'
 import { ThemesConfig } from './Themes'
 
@@ -18,4 +19,5 @@ export const blocks = [
   PricingConfig,
   FeaturesConfig,
   ContactConfig,
+  InsuranceConfig,
 ]
