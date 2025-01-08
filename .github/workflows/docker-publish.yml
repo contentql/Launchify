@@ -80,7 +80,6 @@ jobs:
           platforms: linux/amd64
           build-args: |
             DATABASE_URI=${{ secrets.DATABASE_URI }}
-            DATABASE_SECRET=${{ secrets.DATABASE_SECRET }}
             PAYLOAD_SECRET=${{ secrets.PAYLOAD_SECRET }}
             NEXT_PUBLIC_PUBLIC_URL=${{ secrets.NEXT_PUBLIC_PUBLIC_URL }}
             PAYLOAD_URL=${{ secrets.PAYLOAD_URL }}
@@ -93,3 +92,5 @@ jobs:
             RESEND_SENDER_EMAIL=${{ secrets.RESEND_SENDER_EMAIL }}
             RESEND_SENDER_NAME=${{ secrets.RESEND_SENDER_NAME }}
             SUBSCRIPTION_PLAN=${{secrets.SUBSCRIPTION_PLAN}}
+            RAILWAY_PERSONAL_ACCESS_TOKEN=${{secrets.RAILWAY_PERSONAL_ACCESS_TOKEN}}
+            RAILWAY_TEAM_CQL_ACCESS_TOKEN=${{secrets.RAILWAY_TEAM_CQL_ACCESS_TOKEN}}
