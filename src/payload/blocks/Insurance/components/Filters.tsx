@@ -53,10 +53,10 @@ function Filters({ block }: { block: InsuranceType }) {
     isPending: isInsurancePending,
   } = trpc.public.getInsuranceDetails.useMutation({
     onSuccess: () => {
-      toast.success(`success`)
+      toast.success(`Successfully fetched data`)
     },
     onError: () => {
-      toast.error(`error`)
+      toast.error(`Error while fetching data`)
     },
   })
 

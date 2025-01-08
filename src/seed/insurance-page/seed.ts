@@ -8,16 +8,16 @@ const payload = await getPayloadHMR({ config: configPromise })
 
 const seed = async (spinner: Ora): Promise<any> => {
   try {
-    spinner.start(`Started created pricing-page...`)
+    spinner.start(`Started creating insurance-page...`)
 
     const result = await payload.create({
       collection: 'pages',
       data: InsurancePageData,
     })
-    spinner.succeed(`Successfully created support-page`)
+    spinner.succeed(`Successfully created insurance-page`)
     return result
   } catch (error) {
-    spinner.succeed(`Failed to create support-page`)
+    spinner.succeed(`Failed to create insurance-page`)
     throw error
   }
 }
