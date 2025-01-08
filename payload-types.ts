@@ -221,7 +221,17 @@ export interface Page {
   id: string;
   title: string;
   layout?:
-    | (HeroType | FeatureType | AboutType | ThemesType | FaqsType | PricingType | FeaturesType | ContactType)[]
+    | (
+        | HeroType
+        | FeatureType
+        | AboutType
+        | ThemesType
+        | FaqsType
+        | PricingType
+        | FeaturesType
+        | ContactType
+        | InsuranceType
+      )[]
     | null;
   isHome?: boolean | null;
   isDynamic?: boolean | null;
@@ -373,6 +383,34 @@ export interface ContactType {
   id?: string | null;
   blockName?: string | null;
   blockType: 'ContactBlock';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "InsuranceType".
+ */
+export interface InsuranceType {
+  title: string;
+  description?: string | null;
+  citizenship?:
+    | {
+        country: string;
+        code: string;
+        id?: string | null;
+      }[]
+    | null;
+  destination?:
+    | {
+        location: string;
+        value: number;
+        id?: string | null;
+      }[]
+    | null;
+  age?: number | null;
+  startDate?: string | null;
+  endDate?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'Insurance';
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema

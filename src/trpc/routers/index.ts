@@ -5,6 +5,7 @@ import { userRouter } from '@/trpc/routers/user'
 
 import { cloudflareRouter } from './cloudflare'
 import { pageRouter } from './page'
+import { publicRouter } from './public'
 import { railwayRouter } from './railway'
 import { seedRouter } from './seed'
 import { serviceRouter } from './service'
@@ -20,6 +21,7 @@ export const appRouter = router({
   page: pageRouter,
   siteSettings: siteSettingsRouter,
   seed: seedRouter,
+  public: publicRouter,
 })
 
 export type AppRouter = typeof appRouter

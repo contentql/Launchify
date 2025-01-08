@@ -62,6 +62,16 @@ export const siteSettingsData: siteSettingsDataType = {
           },
         },
       },
+      {
+        group: false,
+        menuLink: {
+          label: '',
+          page: {
+            relationTo: 'pages',
+            value: '',
+          },
+        },
+      },
     ],
   },
 
@@ -73,6 +83,16 @@ export const siteSettingsData: siteSettingsDataType = {
       width: 40,
     },
     footerLinks: [
+      {
+        group: false,
+        menuLink: {
+          label: '',
+          page: {
+            relationTo: 'pages',
+            value: '',
+          },
+        },
+      },
       {
         group: false,
         menuLink: {

@@ -3,6 +3,7 @@ import ora from 'ora'
 
 import { seedFeaturesPage } from '@/seed/features-page'
 import { seedHomePage } from '@/seed/home-page'
+import { seedInsurancePage } from '@/seed/insurance-page'
 import { seedPricingPage } from '@/seed/pricing'
 import { seedSiteSettingsGlobal } from '@/seed/site-settings'
 import { seedSupportPage } from '@/seed/support-page'
@@ -28,6 +29,7 @@ export const seedRouter = router({
       await seedSupportPage(spinner)
       await seedThemesPage(spinner)
       await seedPricingPage(spinner)
+      await seedInsurancePage(spinner)
       await seedSiteSettingsGlobal({ spinner })
       return { success: true }
     } catch (error: any) {

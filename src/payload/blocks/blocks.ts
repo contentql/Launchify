@@ -4,6 +4,7 @@ import { FaqsBlock } from './Faqs'
 import { FeatureBlock } from './Feature'
 import { FeaturesBlock } from './Features'
 import { HeroBlock } from './Hero'
+import { Insurance } from './Insurance'
 import { PricingBlock } from './Pricing'
 import { ThemesBlock } from './Themes'
 
@@ -16,4 +17,5 @@ export const blocksJSX = {
   PricingBlock,
   FeaturesBlock,
   ContactBlock,
+  Insurance,
 }
